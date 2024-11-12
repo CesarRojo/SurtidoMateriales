@@ -1,14 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import './VerSolicitudes.css';
+import './VerSolicitudesLinea.css'; // Asegúrate de crear este archivo CSS para estilos
 
-function VerSolicitudes() {
+function VerSolLineaComponent({ IdentLinea, shouldFetch }) {
   const [dataSolicitudes, setDataSolicitudes] = useState([]);
 
   useEffect(() => {
     const fetchDataSolicitudes = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/solicitudes/`);
+        const response = await axios.get(`http://localhost:3000/solicitudes/area/${IdentLinea}`);
         console.log("Datos RAAAAH", response.data);
         setDataSolicitudes(response.data);
       } catch (error) {
@@ -17,7 +17,7 @@ function VerSolicitudes() {
     };
 
     fetchDataSolicitudes();
-  }, []);
+  }, [IdentLinea, shouldFetch]); // Agrega shouldFetch como dependencia
 
   // Función para determinar el color de fondo según el estado de la solicitud
   const getBackgroundColor = (estado) => {
@@ -33,24 +33,9 @@ function VerSolicitudes() {
     }
   };
 
-  // Función para actualizar el estado de las solicitudes
-  const updateEstado = async (idSolicitud, nuevoEstado) => {
-    try {
-      await axios.put(`http://localhost:3000/solicitudes/${idSolicitud}`, { estado: nuevoEstado }); //Hacer un put con axios usando el idSolicitud y enviando el body del estado
-      // Actualizar el estado localmente
-      setDataSolicitudes(prevSolicitudes => 
-        prevSolicitudes.map(solicitud => 
-          solicitud.idSolicitud === idSolicitud ? { ...solicitud, estado: nuevoEstado } : solicitud
-        )
-      );
-    } catch (error) {
-      console.log("<<Error updating estado>>", error);
-    }
-  };
-
   return (
     <div className="solicitudes-container">
-      <h1>Lista de Solicitudes de Materiales</h1>
+      <h1>Lista de Solicitudes Hechas</h1>
       {dataSolicitudes.length > 0 ? (
         <div className="solicitudes-cards">
           {dataSolicitudes.map((solicitud) => (
@@ -66,17 +51,6 @@ function VerSolicitudes() {
               <p><strong>Cantidad:</strong> {solicitud.cantidad} {solicitud.tipoCantidad}</p>
               <p><strong>Estado:</strong> {solicitud.estado}</p>
               <p><strong>Fecha Solicitud:</strong> {new Date(solicitud.fechaSolicitud).toLocaleString()}</p>
-              <div className="button-group">
-                {['Pendiente', 'En proceso', 'Entregado'].map((estado) => (
-                  <button 
-                    key={estado} 
-                    onClick={() => updateEstado(solicitud.idSolicitud, estado)}
-                    disabled={solicitud.estado === estado} // Deshabilitar boton si ya está en ese estado
-                  >
-                    Marcar como {estado}
-                  </button>
-                ))}
-              </div>
             </div>
           ))}
         </div>
@@ -87,4 +61,4 @@ function VerSolicitudes() {
   );
 }
 
-export default VerSolicitudes;
+export default VerSolLineaComponent;

@@ -7,7 +7,7 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<PedirMaterial />} />
+        <Route path="/:IdentLinea" element={<PedirMaterial />} />
         <Route path="/solicitudes" element={<VerSolicitudes />} />
       </Routes>
     </Router>
