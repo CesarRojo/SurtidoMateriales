@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import './FormPeticiones.css'
 
 function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
     const [dataArea, setDataArea] = useState([]);
@@ -8,6 +9,7 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
     const [selectedMaterial, setSelectedMaterial] = useState("");
     const [selectedType, setSelectedType] = useState("");
     const [quantity, setQuantity] = useState("");
+    const [errorMessage, setErrorMessage] = useState(""); // Para manejar mensajes de error
 
     useEffect(() => {
         const fetchDataArea = async () => {
@@ -36,6 +38,14 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        // Validación de campos
+        if (!selectedArea || !selectedMaterial || !selectedType || !quantity) {
+            setErrorMessage("Por favor, complete todos los campos.");
+            return;
+        }
+
+        setErrorMessage(""); // Limpiar mensaje de error si todos los campos son válidos
         
         const currentDate = new Date().toISOString(); // Obtiene la fecha actual en formato ISO
         const newRequest = {
@@ -125,8 +135,11 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
                     />
                 </div>
 
+                {errorMessage && <p className="error-message">{errorMessage}</p>} {/* Mostrar mensaje de error */}
+
                 <button type="submit">Enviar</button>
             </form>
+            <button className="recargaBtn" onClick={onFormSubmit}>Recargar solicitudes</button>
         </>
     );
 }

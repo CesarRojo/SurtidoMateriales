@@ -59,3 +59,19 @@
     background-color: #ccc; /* Color de fondo para botones deshabilitados */
     cursor: not-allowed;
   }
+
+  .filter-container {
+    max-width: 100%;
+    background-color: lightgray;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin: 15px 3.2%;
+    padding: 15px;
+    border-radius: 10px;
+  }
+
+  .filter-container select {
+    width: 30%;
+    margin: 0
+  }

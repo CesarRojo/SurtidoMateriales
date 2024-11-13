@@ -1,0 +1,59 @@
+/* Estilo general del formulario */
+form {
+    text-align: center;
+}
+
+form label {
+    text-align: left;
+}
+
+/* Estilo de los labels */
+label {
+    display: block; /* Para que cada label esté en su propia línea */
+    margin-bottom: 5px; /* Espacio entre el label y el input/select */
+    font-weight: bold; /* Negrita para los labels */
+}
+
+/* Estilo de los select y input */
+select, input[type="number"] {
+    width: 100%; /* Ancho completo */
+    padding: 10px; /* Espaciado interno */
+    margin-bottom: 15px; /* Espacio entre campos */
+    border: 1px solid #ccc; /* Borde gris */
+    border-radius: 4px; /* Bordes redondeados */
+    font-size: 16px; /* Tamaño de fuente */
+}
+
+input[type="number"]{
+    width: 91%;
+}
+
+/* Estilo del botón */
+button {
+    background-color: #007bff; /* Color de fondo azul */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    padding: 10px 15px; /* Espaciado interno */
+    border-radius: 4px; /* Bordes redondeados */
+    cursor: pointer; /* Cambiar cursor al pasar sobre el botón */
+    font-size: 16px; /* Tamaño de fuente */
+    transition: background-color 0.3s; /* Transición suave para el color */
+}
+
+/* Efecto hover para el botón */
+button:hover {
+    background-color: #0056b3; /* Color más oscuro al pasar el mouse */
+}
+
+/* Estilo de los mensajes de error (opcional) */
+.error-message {
+    color: red; /* Color rojo para mensajes de error */
+    font-size: 18px; /* Tamaño de fuente del mensaje */
+    font-weight: bold;
+}
+
+.recargaBtn {
+    margin: 15px 12.5%;
+    width: 80%;
+}
+

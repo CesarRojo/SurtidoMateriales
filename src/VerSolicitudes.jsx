@@ -4,6 +4,9 @@ import './VerSolicitudes.css';
 
 function VerSolicitudes() {
   const [dataSolicitudes, setDataSolicitudes] = useState([]);
+  const [estadoFiltro, setEstadoFiltro] = useState('');
+  const [lineaFiltro, setLineaFiltro] = useState('');
+  const [fechaFiltro, setFechaFiltro] = useState('');
 
   useEffect(() => {
     const fetchDataSolicitudes = async () => {
@@ -36,7 +39,7 @@ function VerSolicitudes() {
   // Función para actualizar el estado de las solicitudes
   const updateEstado = async (idSolicitud, nuevoEstado) => {
     try {
-      await axios.put(`http://localhost:3000/solicitudes/${idSolicitud}`, { estado: nuevoEstado }); //Hacer un put con axios usando el idSolicitud y enviando el body del estado
+      await axios.put(`http://localhost:3000/solicitudes/${idSolicitud}`, { estado: nuevoEstado });
       // Actualizar el estado localmente
       setDataSolicitudes(prevSolicitudes => 
         prevSolicitudes.map(solicitud => 
@@ -48,12 +51,53 @@ function VerSolicitudes() {
     }
   };
 
+  // Filtrar solicitudes
+  const filteredSolicitudes = dataSolicitudes.filter(solicitud => {
+    const estadoMatch = estadoFiltro ? solicitud.estado === estadoFiltro : true;
+    const lineaMatch = lineaFiltro ? solicitud.linea.nombre === lineaFiltro : true;
+
+    // Obtener la fecha de hoy en formato YYYY-MM-DD
+    const hoy = new Date();
+    const fechaHoy = hoy.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+
+    // Obtener la fecha de la solicitud en formato YYYY-MM-DD
+    const fechaSolicitud = new Date(solicitud.fechaSolicitud).toISOString().split('T')[0];
+
+    // Si hay un filtro de fecha, usarlo; de lo contrario, usar la fecha de hoy
+    const fechaMatch = fechaFiltro ? fechaSolicitud === fechaFiltro : fechaSolicitud === fechaHoy;
+
+    return estadoMatch && lineaMatch && fechaMatch;
+  });
+
+  // Obtener líneas únicas para el combobox
+  const lineasUnicas = [...new Set(dataSolicitudes.map(solicitud => solicitud.linea.nombre))];
+
   return (
     <div className="solicitudes-container">
       <h1>Lista de Solicitudes de Materiales</h1>
-      {dataSolicitudes.length > 0 ? (
+      <div className="filter-container">
+        <select value={estadoFiltro} onChange={(e) => setEstadoFiltro(e.target.value)}>
+          <option value="">Filtrar por Estado</option>
+          <option value="Pendiente">Pendiente</option>
+          <option value="En proceso">En proceso</option>
+          <option value="Entregado">Entregado</option>
+        </select>
+        <select value={lineaFiltro} onChange={(e) => setLineaFiltro(e.target.value)}>
+          <option value="">Filtrar por Línea</option>
+          {lineasUnicas.map((linea, index) => (
+            <option key={index} value={linea}>{linea}</option>
+          ))}
+        </select>
+        <input 
+          type="date" 
+          value={fechaFiltro} 
+          onChange={(e) => setFechaFiltro(e.target.value)} 
+          placeholder="Filtrar por Fecha" 
+        />
+      </div>
+      {filteredSolicitudes.length > 0 ? (
         <div className="solicitudes-cards">
-          {dataSolicitudes.map((solicitud) => (
+          {filteredSolicitudes.map((solicitud) => (
             <div 
               className="solicitud-card" 
               key={solicitud.idSolicitud} 
@@ -81,7 +125,7 @@ function VerSolicitudes() {
           ))}
         </div>
       ) : (
-        <p>Cargando...</p>
+        <p>No hay solicitudes para mostrar.</p>
       )}
     </div>
   );

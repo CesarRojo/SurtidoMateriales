@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import ErrorComponent from "./errorComponent/errorComponent";
 import FormPeticionesComponent from "./FormPeticionesComponent/FormPeticionesComponent";
 import VerSolLineaComponent from "./VerSolLineaComponent/VerSolLineaComponent";
+import './PedirMaterial.css'
 
 function PedirMaterial() {
   const [dataLinea, setDataLinea] = useState(null);
@@ -53,17 +54,23 @@ function PedirMaterial() {
 
   return (
       <>
-        <h1>Línea {nombreLinea}</h1>
         {isValid ? (
           <>
-            <FormPeticionesComponent 
-              IdLinea={idLinea}
-              onFormSubmit={handleFormSubmit} // Pasa la función al componente hijo (este componente hijo tiene el botón para enviar)
-            />
-            <VerSolLineaComponent 
-              IdentLinea={IdentLinea}
-              shouldFetch={shouldFetchSolicitudes} // Pasa el estado al componente hijo (este componente hijo tiene los datos que se deben actualizar)
-            />
+            <div className="content">
+                <div className="form-container">
+                    <h1>Línea {nombreLinea}</h1>
+                    <FormPeticionesComponent 
+                        IdLinea={idLinea}
+                        onFormSubmit={handleFormSubmit} 
+                    />
+                </div>
+                <div className="solicitudes-contenedor">
+                    <VerSolLineaComponent 
+                        IdentLinea={IdentLinea}
+                        shouldFetch={shouldFetchSolicitudes} 
+                    />
+                </div>
+            </div>
           </>
         ) : (
           <ErrorComponent />
