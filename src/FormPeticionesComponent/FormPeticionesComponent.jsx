@@ -1,15 +1,16 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
+import Select from 'react-select';
 import './FormPeticiones.css'
 
 function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
     const [dataArea, setDataArea] = useState([]);
     const [dataMaterial, setDataMaterial] = useState([]);
     const [selectedArea, setSelectedArea] = useState("");
-    const [selectedMaterial, setSelectedMaterial] = useState("");
+    const [selectedMaterial, setSelectedMaterial] = useState(null);
     const [selectedType, setSelectedType] = useState("");
     const [quantity, setQuantity] = useState("");
-    const [errorMessage, setErrorMessage] = useState(""); // Para manejar mensajes de error
+    const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
         const fetchDataArea = async () => {
@@ -26,7 +27,11 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
             try {
                 const response = await axios.get(`http://localhost:3000/material/`);
                 console.log("Datos Materiales RAAAAH", response.data);
-                setDataMaterial(response.data);
+                const formattedMaterials = response.data.map(material => ({
+                    value: material.idMaterial,
+                    label: material.nombre
+                }));
+                setDataMaterial(formattedMaterials);
             } catch (error) {
                 console.log("<<Error fetching data>>", error);
             }
@@ -35,6 +40,24 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
         fetchDataArea();
         fetchDataMaterial();
     }, []);
+
+    const getTurno = () => {
+        const currentHour = new Date().getHours();
+        const currentMinutes = new Date().getMinutes();
+        
+        // Si la hora es entre 7:00 AM (7) y 4:30 PM (16:30)
+        if (currentHour === 16 && currentMinutes >= 0 && currentMinutes < 30) {
+            return 'A'; // Incluye hasta las 16:29
+        } else if (currentHour >= 7 && currentHour < 17) {
+            return 'A'; // Desde las 7:00 AM hasta las 4:29 PM
+        } else if (currentHour === 17 && currentMinutes >= 30) {
+            return 'B'; // Desde las 5:30 PM (17:30) en adelante
+        } else if (currentHour > 17 || (currentHour < 2)) {
+            return 'B'; // Desde las 5:30 PM hasta la 1:30 AM
+        } else {
+            return 'A'; // Cualquier otro caso (por si acaso)
+        }
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -53,9 +76,10 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
             cantidad: parseInt(quantity),
             estado: "Pendiente",
             fechaSolicitud: currentDate,
-            idMaterial: parseInt(selectedMaterial),
+            idMaterial: parseInt(selectedMaterial.value),
             tipoCantidad: selectedType,
             idLinea: IdLinea,
+            Turno: getTurno() // Agregar el campo "turno"
         };
 
         try {
@@ -63,12 +87,12 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
             console.log("Solicitud enviada con éxito:", response.data);
             // Limpiar el formulario
             setSelectedArea("");
-            setSelectedMaterial("");
+            setSelectedMaterial(null);
             setSelectedType("");
             setQuantity("");
 
             // Llama a la función para indicar que el formulario se ha enviado
-            onFormSubmit(); // Esto actualizará el estado en PedirMaterial
+            onFormSubmit();
 
         } catch (error) {
             console.error("Error al enviar la solicitud:", error);
@@ -96,18 +120,15 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
 
                 <div>
                     <label htmlFor="material">Material:</label>
-                    <select
+                    <Select
                         id="material"
+                        isClearable
+                        options={dataMaterial}
                         value={selectedMaterial}
-                        onChange={(e) => setSelectedMaterial(e.target.value)}
-                    >
-                        <option value="">Seleccione un material</option>
-                        {dataMaterial.map((material) => (
-                            <option key={material.idMaterial} value={material.idMaterial}>
-                                {material.nombre}
-                            </option>
-                        ))}
-                    </select>
+                        onChange={setSelectedMaterial}
+                        placeholder="Seleccione o busque un material"
+                        isSearchable // Habilita la búsqueda
+                    />
                 </div>
 
                 <div>
@@ -125,7 +146,7 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
                 </div>
 
                 <div>
-                    <label htmlFor="quantity">Cantidad:</label>
+                    < label htmlFor="quantity">Cantidad:</label>
                     <input
                         type="number"
                         id="quantity"

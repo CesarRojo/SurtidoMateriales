@@ -51,6 +51,24 @@ function VerSolicitudes() {
     }
   };
 
+  // Función para obtener el turno actual
+  const getTurno = () => {
+    const currentHour = new Date().getHours();
+    const currentMinutes = new Date().getMinutes();
+
+    if (currentHour === 16 && currentMinutes >= 0 && currentMinutes < 30) {
+      return 'A'; // Incluye hasta las 16:29
+    } else if (currentHour >= 7 && currentHour < 17) {
+      return 'A'; // Desde las 7:00 AM hasta las 4:29 PM
+    } else if (currentHour === 17 && currentMinutes >= 30) {
+      return 'B'; // Desde las 5:30 PM (17:30) en adelante
+    } else if (currentHour > 17 || (currentHour < 2)) {
+      return 'B'; // Desde las 5:30 PM hasta la 1:30 AM
+    } else {
+      return 'A'; // Cualquier otro caso (por si acaso)
+    }
+  };
+
   // Filtrar solicitudes
   const filteredSolicitudes = dataSolicitudes.filter(solicitud => {
     const estadoMatch = estadoFiltro ? solicitud.estado === estadoFiltro : true;
@@ -68,6 +86,10 @@ function VerSolicitudes() {
 
     return estadoMatch && lineaMatch && fechaMatch;
   });
+
+  // Filtrar las solicitudes según el turno actual
+  const turnoActual = getTurno();
+  const solicitudesTurnoActual = filteredSolicitudes.filter(solicitud => solicitud.Turno === turnoActual);
 
   // Obtener líneas únicas para el combobox
   const lineasUnicas = [...new Set(dataSolicitudes.map(solicitud => solicitud.linea.nombre))];
@@ -95,9 +117,9 @@ function VerSolicitudes() {
           placeholder="Filtrar por Fecha" 
         />
       </div>
-      {filteredSolicitudes.length > 0 ? (
+      {solicitudesTurnoActual.length > 0 ? (
         <div className="solicitudes-cards">
-          {filteredSolicitudes.map((solicitud) => (
+          {solicitudesTurnoActual.map((solicitud) => (
             <div 
               className="solicitud-card" 
               key={solicitud.idSolicitud} 
@@ -125,7 +147,7 @@ function VerSolicitudes() {
           ))}
         </div>
       ) : (
-        <p>No hay solicitudes para mostrar.</p>
+        <p>No hay solicitudes para el turno actual.</p>
       )}
     </div>
   );

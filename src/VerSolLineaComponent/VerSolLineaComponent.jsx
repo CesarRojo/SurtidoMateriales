@@ -33,12 +33,35 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch }) {
     }
   };
 
+  // Función para obtener el turno actual
+  const getTurno = () => {
+    const currentHour = new Date().getHours();
+    const currentMinutes = new Date().getMinutes();
+
+    // Si la hora es entre 7:00 AM (7) y 4:30 PM (16:30)
+    if (currentHour === 16 && currentMinutes >= 0 && currentMinutes < 30) {
+        return 'A'; // Incluye hasta las 16:29
+    } else if (currentHour >= 7 && currentHour < 17) {
+        return 'A'; // Desde las 7:00 AM hasta las 4:29 PM
+    } else if (currentHour === 17 && currentMinutes >= 30) {
+        return 'B'; // Desde las 5:30 PM (17:30) en adelante
+    } else if (currentHour > 17 || (currentHour < 2)) {
+        return 'B'; // Desde las 5:30 PM hasta la 1:30 AM
+    } else {
+        return 'A'; // Cualquier otro caso (por si acaso)
+    }
+  };
+
+  // Filtrar las solicitudes según el turno actual
+  const turnoActual = getTurno();
+  const solicitudesFiltradas = dataSolicitudes.filter(solicitud => solicitud.Turno === turnoActual);
+
   return (
     <div className="solicitudes-container">
       <h1>Lista de Solicitudes Hechas</h1>
-      {dataSolicitudes.length > 0 ? (
+      {solicitudesFiltradas.length > 0 ? (
         <div className="solicitudes-cards">
-          {dataSolicitudes.map((solicitud) => (
+          {solicitudesFiltradas.map((solicitud) => (
             <div 
               className="solicitud-card" 
               key={solicitud.idSolicitud} 
@@ -55,10 +78,14 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch }) {
           ))}
         </div>
       ) : (
-        <p>Cargando...</p>
+        <p>No hay solicitudes para el turno actual.</p>
       )}
     </div>
   );
 }
 
 export default VerSolLineaComponent;
+
+/*
+
+*/
