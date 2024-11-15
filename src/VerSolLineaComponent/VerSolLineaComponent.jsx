@@ -52,9 +52,21 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch }) {
     }
   };
 
+  // Filtrar solicitudes por fecha de hoy
+  const filteredSolicitudes = dataSolicitudes.filter(solicitud => {
+    // Obtener la fecha de hoy en formato YYYY-MM-DD
+    const hoy = new Date();
+    const fechaHoy = hoy.toISOString().split('T')[0]; // Formato YYYY-MM-DD
+
+    // Obtener la fecha de la solicitud en formato YYYY-MM-DD
+    const fechaSolicitud = new Date(solicitud.fechaSolicitud).toISOString().split('T')[0];
+
+    return fechaSolicitud === fechaHoy; // Filtrar solo solicitudes de hoy
+  });
+
   // Filtrar las solicitudes según el turno actual
   const turnoActual = getTurno();
-  const solicitudesFiltradas = dataSolicitudes.filter(solicitud => solicitud.Turno === turnoActual);
+  const solicitudesFiltradas = filteredSolicitudes.filter(solicitud => solicitud.Turno === turnoActual);
 
   return (
     <div className="solicitudes-container">
