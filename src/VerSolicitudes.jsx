@@ -1,5 +1,7 @@
+import * as XLSX from 'xlsx';
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import './VerSolicitudes.css';
 
 function VerSolicitudes() {
@@ -7,12 +9,13 @@ function VerSolicitudes() {
   const [estadoFiltro, setEstadoFiltro] = useState('');
   const [lineaFiltro, setLineaFiltro] = useState('');
   const [fechaFiltro, setFechaFiltro] = useState('');
+  const { IdentLinea } = useParams();
 
   useEffect(() => {
     const fetchDataSolicitudes = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/solicitudes/`);
-        console.log("Datos RAAAAH", response.data);
+        const response = await axios.get(`http://localhost:3000/solicitudes/area/${IdentLinea}`);
+        console.log("Datos AAAAquiiiii", response.data);
         setDataSolicitudes(response.data);
       } catch (error) {
         console.log("<<Error fetching data>>", error);
@@ -21,6 +24,28 @@ function VerSolicitudes() {
 
     fetchDataSolicitudes();
   }, []);
+
+  // Función para exportar a Excel
+  const exportToExcel = () => {
+    // Crear un libro de trabajo
+    const wb = XLSX.utils.book_new();
+    
+    // Crear una hoja de trabajo a partir de los datos filtrados
+    const ws = XLSX.utils.json_to_sheet(solicitudesTurnoActual.map(solicitud => ({
+      'ID Solicitud': solicitud.idSolicitud,
+      'Línea': solicitud.linea.nombre,
+      'Material': solicitud.material.numero,
+      'Cantidad': `${solicitud.cantidad} ${solicitud.tipoCantidad}`,
+      'Estado': solicitud.estado,
+      'Fecha Solicitud': new Date(solicitud.fechaSolicitud).toLocaleString(),
+    })));
+
+    // Agregar la hoja de trabajo al libro
+    XLSX.utils.book_append_sheet(wb, ws, 'Solicitudes');
+
+    // Exportar el libro
+    XLSX.writeFile(wb, 'Solicitudes.xlsx');
+  };
 
   // Función para determinar el color de fondo según el estado de la solicitud
   const getBackgroundColor = (estado) => {
@@ -60,8 +85,8 @@ function VerSolicitudes() {
       return 'A'; // Incluye hasta las 16:29
     } else if (currentHour >= 7 && currentHour < 17) {
       return 'A'; // Desde las 7:00 AM hasta las 4:29 PM
-    } else if (currentHour === 17 && currentMinutes >= 30) {
-      return 'B'; // Desde las 5:30 PM (17:30) en adelante
+    } else if (currentHour === 17 && currentMinutes >= 0) {
+      return 'B'; // Desde las 5:00 PM (17:00) en adelante
     } else if (currentHour > 17 || (currentHour < 2)) {
       return 'B'; // Desde las 5:30 PM hasta la 1:30 AM
     } else {
@@ -101,14 +126,7 @@ function VerSolicitudes() {
         <select value={estadoFiltro} onChange={(e) => setEstadoFiltro(e.target.value)}>
           <option value="">Filtrar por Estado</option>
           <option value="Pendiente">Pendiente</option>
-          <option value="En proceso">En proceso</option>
           <option value="Entregado">Entregado</option>
-        </select>
-        <select value={lineaFiltro} onChange={(e) => setLineaFiltro(e.target.value)}>
-          <option value="">Filtrar por Línea</option>
-          {lineasUnicas.map((linea, index) => (
-            <option key={index} value={linea}>{linea}</option>
-          ))}
         </select>
         <input 
           type="date" 
@@ -116,36 +134,48 @@ function VerSolicitudes() {
           onChange={(e) => setFechaFiltro(e.target.value)} 
           placeholder="Filtrar por Fecha" 
         />
+        <button onClick={exportToExcel}>Exportar a Excel</button>
       </div>
       {solicitudesTurnoActual.length > 0 ? (
-        <div className="solicitudes-cards">
-          {solicitudesTurnoActual.map((solicitud) => (
-            <div 
-              className="solicitud-card" 
-              key={solicitud.idSolicitud} 
-              style={{ backgroundColor: getBackgroundColor(solicitud.estado) }}
-            >
-              <h2>Solicitud ID: {solicitud.idSolicitud}</h2>
-              <p><strong>Área:</strong> {solicitud.area.nombre}</p>
-              <p><strong>Línea:</strong> {solicitud.linea.nombre}</p>
-              <p><strong>Material:</strong> {solicitud.material.nombre}</p>
-              <p><strong>Cantidad:</strong> {solicitud.cantidad} {solicitud.tipoCantidad}</p>
-              <p><strong>Estado:</strong> {solicitud.estado}</p>
-              <p><strong>Fecha Solicitud:</strong> {new Date(solicitud.fechaSolicitud).toLocaleString()}</p>
-              <div className="button-group">
-                {['Pendiente', 'En proceso', 'Entregado'].map((estado) => (
+        <table className="solicitudes-table">
+          <thead>
+            <tr>
+              <th>ID Solicitud</th>
+              <th>Línea</th>
+              <th>Material</th>
+              <th>Cantidad</th>
+              <th>Estado</th>
+              <th>Fecha Solicitud</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {solicitudesTurnoActual.map((solicitud) => (
+              <tr key={solicitud.idSolicitud} style={{ backgroundColor: getBackgroundColor(solicitud.estado) }}>
+                <td>{solicitud.idSolicitud}</td>
+                <td>{solicitud.linea.nombre}</td>
+                <td>{solicitud.material.numero}</td>
+                <td>{solicitud.cantidad} {solicitud.tipoCantidad}</td>
+                <td>{solicitud.estado}</td>
+                <td>{new Date(solicitud.fechaSolicitud).toLocaleString()}</td>
+                <td>
                   <button 
-                    key={estado} 
-                    onClick={() => updateEstado(solicitud.idSolicitud, estado)}
-                    disabled={solicitud.estado === estado} // Deshabilitar boton si ya está en ese estado
+                    onClick={() => updateEstado(solicitud.idSolicitud, 'Pendiente')}
+                    disabled={solicitud.estado === 'Pendiente'}
                   >
-                    Marcar como {estado}
+                    Marcar como Pendiente
                   </button>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+                  <button 
+                    onClick={() => updateEstado(solicitud.idSolicitud, 'Entregado')}
+                    disabled={solicitud.estado === 'Entregado'}
+                  >
+                    Marcar como Entregado
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       ) : (
         <p>No hay solicitudes para el turno actual.</p>
       )}

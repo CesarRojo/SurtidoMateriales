@@ -4,24 +4,13 @@ import Select from 'react-select';
 import './FormPeticiones.css'
 
 function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
-    const [dataArea, setDataArea] = useState([]);
     const [dataMaterial, setDataMaterial] = useState([]);
-    const [selectedArea, setSelectedArea] = useState("");
     const [selectedMaterial, setSelectedMaterial] = useState(null);
     const [selectedType, setSelectedType] = useState("");
     const [quantity, setQuantity] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
     useEffect(() => {
-        const fetchDataArea = async () => {
-            try {
-                const response = await axios.get(`http://localhost:3000/areas/`);
-                console.log("Datos Areas RAAAAH", response.data);
-                setDataArea(response.data);
-            } catch (error) {
-                console.log("<<Error fetching data>>", error);
-            }
-        };
 
         const fetchDataMaterial = async () => {
             try {
@@ -29,7 +18,7 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
                 console.log("Datos Materiales RAAAAH", response.data);
                 const formattedMaterials = response.data.map(material => ({
                     value: material.idMaterial,
-                    label: material.nombre
+                    label: material.numero
                 }));
                 setDataMaterial(formattedMaterials);
             } catch (error) {
@@ -37,7 +26,6 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
             }
         };
 
-        fetchDataArea();
         fetchDataMaterial();
     }, []);
 
@@ -63,7 +51,7 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
         event.preventDefault();
 
         // Validación de campos
-        if (!selectedArea || !selectedMaterial || !selectedType || !quantity) {
+        if (!selectedMaterial || !selectedType || !quantity) {
             setErrorMessage("Por favor, complete todos los campos.");
             return;
         }
@@ -72,7 +60,6 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
         
         const currentDate = new Date().toISOString(); // Obtiene la fecha actual en formato ISO
         const newRequest = {
-            idArea: parseInt(selectedArea),
             cantidad: parseInt(quantity),
             estado: "Pendiente",
             fechaSolicitud: currentDate,
@@ -86,7 +73,6 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
             const response = await axios.post(`http://localhost:3000/solicitudes/`, newRequest);
             console.log("Solicitud enviada con éxito:", response.data);
             // Limpiar el formulario
-            setSelectedArea("");
             setSelectedMaterial(null);
             setSelectedType("");
             setQuantity("");
@@ -102,22 +88,6 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
     return (
         <>
             <form onSubmit={handleSubmit}>
-                <div>
-                    <label htmlFor="area">Área:</label>
-                    <select
-                        id="area"
-                        value={selectedArea}
-                        onChange={(e) => setSelectedArea(e.target.value)}
-                    >
-                        <option value="">Seleccione un área</option>
-                        {dataArea.map((area) => (
-                            <option key={area.idArea} value={area.idArea}>
-                                {area.nombre}
-                            </option>
-                        ))}
-                    </select>
-                </div>
-
                 <div>
                     <label htmlFor="material">Material:</label>
                     <Select
@@ -160,7 +130,8 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
 
                 <button type="submit">Enviar</button>
             </form>
-            <button className="recargaBtn" onClick={onFormSubmit}>Recargar solicitudes</button>
+            <button className="recargaBtn" onClick={onFormSubmit}>Actualizar</button>
+            <img src="logo.png" alt="logoATR" />
         </>
     );
 }

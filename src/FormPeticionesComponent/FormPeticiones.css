@@ -57,3 +57,9 @@ button:hover {
     width: 80%;
 }
 
+img {
+    display: block; /* Asegura que la imagen esté en su propia línea */
+    margin: 120% auto; /* Centra la imagen y agrega espacio superior e inferior */
+    max-width: 100%; /* Asegura que la imagen no exceda el ancho del contenedor */
+    height: auto; /* Mantiene la relación de aspecto */
+}

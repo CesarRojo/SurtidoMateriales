@@ -43,7 +43,7 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch }) {
         return 'A'; // Incluye hasta las 16:29
     } else if (currentHour >= 7 && currentHour < 17) {
         return 'A'; // Desde las 7:00 AM hasta las 4:29 PM
-    } else if (currentHour === 17 && currentMinutes >= 30) {
+    } else if (currentHour === 17 && currentMinutes >= 0) {
         return 'B'; // Desde las 5:30 PM (17:30) en adelante
     } else if (currentHour > 17 || (currentHour < 2)) {
         return 'B'; // Desde las 5:30 PM hasta la 1:30 AM
@@ -72,23 +72,30 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch }) {
     <div className="solicitudes-container">
       <h1>Lista de Solicitudes Hechas</h1>
       {solicitudesFiltradas.length > 0 ? (
-        <div className="solicitudes-cards">
+        <table className="solicitudes-table">
+        <thead>
+          <tr>
+            <th>ID Solicitud</th>
+            <th>Línea</th>
+            <th>Material</th>
+            <th>Cantidad</th>
+            <th>Estado</th>
+            <th>Fecha Solicitud</th>
+          </tr>
+        </thead>
+        <tbody>
           {solicitudesFiltradas.map((solicitud) => (
-            <div 
-              className="solicitud-card" 
-              key={solicitud.idSolicitud} 
-              style={{ backgroundColor: getBackgroundColor(solicitud.estado) }}
-            >
-              <h2>Solicitud ID: {solicitud.idSolicitud}</h2>
-              <p><strong>Área:</strong> {solicitud.area.nombre}</p>
-              <p><strong>Línea:</strong> {solicitud.linea.nombre}</p>
-              <p><strong>Material:</strong> {solicitud.material.nombre}</p>
-              <p><strong>Cantidad:</strong> {solicitud.cantidad} {solicitud.tipoCantidad}</p>
-              <p><strong>Estado:</strong> {solicitud.estado}</p>
-              <p><strong>Fecha Solicitud:</strong> {new Date(solicitud.fechaSolicitud).toLocaleString()}</p>
-            </div>
+            <tr key={solicitud.idSolicitud} style={{ backgroundColor: getBackgroundColor(solicitud.estado) }}>
+              <td>{solicitud.idSolicitud}</td>
+              <td>{solicitud.linea.nombre}</td>
+              <td>{solicitud.material.numero}</td>
+              <td>{solicitud.cantidad} {solicitud.tipoCantidad}</td>
+              <td>{solicitud.estado}</td>
+              <td>{new Date(solicitud.fechaSolicitud).toLocaleString()}</td>
+            </tr>
           ))}
-        </div>
+        </tbody>
+      </table>
       ) : (
         <p>No hay solicitudes para el turno actual.</p>
       )}

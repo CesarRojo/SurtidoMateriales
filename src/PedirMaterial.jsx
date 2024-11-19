@@ -18,7 +18,7 @@ function PedirMaterial() {
     const fetchDataLinea = async () => {
       try {
         const response = await axios.get(`http://localhost:3000/lines/`);
-        console.log("Datos RAAAAH", response.data);
+        console.log("Datos Lineas RAAAAH", response.data);
         setDataLinea(response.data);
       } catch (error) {
         console.log("<<Error fetching data>>", error);
