@@ -17,7 +17,7 @@ function PedirMaterial() {
   useEffect(() => {
     const fetchDataLinea = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/lines/`);
+        const response = await axios.get(`http://172.30.190.47:5000/lines/`);
         console.log("Datos Lineas RAAAAH", response.data);
         setDataLinea(response.data);
       } catch (error) {

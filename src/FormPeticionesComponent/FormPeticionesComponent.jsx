@@ -14,7 +14,7 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
 
         const fetchDataMaterial = async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/material/`);
+                const response = await axios.get(`http://172.30.190.47:5000/material/`);
                 console.log("Datos Materiales RAAAAH", response.data);
                 const formattedMaterials = response.data.map(material => ({
                     value: material.idMaterial,
@@ -70,7 +70,7 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
         };
 
         try {
-            const response = await axios.post(`http://localhost:3000/solicitudes/`, newRequest);
+            const response = await axios.post(`http://172.30.190.47:5000/solicitudes/`, newRequest);
             console.log("Solicitud enviada con éxito:", response.data);
             // Limpiar el formulario
             setSelectedMaterial(null);
