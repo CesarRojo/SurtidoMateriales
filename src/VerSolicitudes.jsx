@@ -8,22 +8,26 @@ function VerSolicitudes() {
   const [dataSolicitudes, setDataSolicitudes] = useState([]);
   const [estadoFiltro, setEstadoFiltro] = useState('');
   const [lineaFiltro, setLineaFiltro] = useState('');
-  const [fechaFiltro, setFechaFiltro] = useState('');
+  const [fechaFiltro, setFechaFiltro] = useState(new Date().toISOString().split('T')[0]); // Inicializa con la fecha de hoy
   const { IdentLinea } = useParams();
 
   useEffect(() => {
     const fetchDataSolicitudes = async () => {
       try {
-        const response = await axios.get(`http://172.30.190.47:5000/solicitudes/area/${IdentLinea}`);
+        const response = await axios.get(`http://172.30.190.47:5000/solicitudes/area/${IdentLinea}`, {
+          params: {
+            fecha: fechaFiltro // Agregar el fechaFiltro aquí
+          }
+        });
         console.log("Datos AAAAquiiiii", response.data);
         setDataSolicitudes(response.data);
       } catch (error) {
         console.log("<<Error fetching data>>", error);
       }
     };
-
+  
     fetchDataSolicitudes();
-  }, []);
+  }, [IdentLinea, fechaFiltro]); // Agregar fechaFiltro como dependencia
 
   // Función para exportar a Excel
   const exportToExcel = () => {

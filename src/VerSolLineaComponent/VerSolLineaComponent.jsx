@@ -8,7 +8,11 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch }) {
   useEffect(() => {
     const fetchDataSolicitudes = async () => {
       try {
-        const response = await axios.get(`http://172.30.190.47:5000/solicitudes/area/${IdentLinea}`);
+        const response = await axios.get(`http://172.30.190.47:5000/solicitudes/area/${IdentLinea}`, {
+          params: {
+            fecha: new Date().toISOString().split('T')[0]
+          }
+        });
         console.log("Datos RAAAAH", response.data);
         setDataSolicitudes(response.data);
       } catch (error) {
