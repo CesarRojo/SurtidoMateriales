@@ -131,7 +131,7 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
                 <button type="submit">Enviar</button>
             </form>
             <button className="recargaBtn" onClick={onFormSubmit}>Actualizar</button>
-            <img src="logo.png" alt="logoATR" />
+            <img src="logo.png" alt="logoATR" className="logoATR"/>
         </>
     );
 }

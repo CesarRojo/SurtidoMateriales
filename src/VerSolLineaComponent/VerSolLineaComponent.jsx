@@ -13,7 +13,6 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch }) {
             fecha: new Date().toISOString().split('T')[0]
           }
         });
-        console.log("Datos RAAAAH", response.data);
         setDataSolicitudes(response.data);
       } catch (error) {
         console.log("<<Error fetching data>>", error);
@@ -21,16 +20,16 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch }) {
     };
 
     fetchDataSolicitudes();
-  }, [IdentLinea, shouldFetch]); // Agrega shouldFetch como dependencia
+  }, [IdentLinea, shouldFetch]); // Agrega shouldFetch como dependencia 
 
   // Función para determinar el color de fondo según el estado de la solicitud
   const getBackgroundColor = (estado) => {
     switch (estado) {
       case 'Pendiente':
         return '#ffcccc'; // Rojo claro
-      case 'En proceso':
-        return '#ffffcc'; // Amarillo claro
-      case 'Entregado':
+      case 'Recibido':
+        return '#008f39'; // Amarillo claro
+      case 'Enviado':
         return '#ccffcc'; // Verde claro
       default:
         return '#ffffff'; // Blanco por defecto
@@ -53,6 +52,20 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch }) {
         return 'B'; // Desde las 5:30 PM hasta la 1:30 AM
     } else {
         return 'A'; // Cualquier otro caso (por si acaso)
+    }
+  };
+
+  const updateEstado = async (idSolicitud, nuevoEstado) => {
+    try {
+      await axios.put(`http://172.30.190.47:5000/solicitudes/${idSolicitud}`, { estado: nuevoEstado });
+      // Actualizar el estado localmente
+      setDataSolicitudes(prevSolicitudes => 
+        prevSolicitudes.map(solicitud => 
+          solicitud.idSolicitud === idSolicitud ? { ...solicitud, estado: nuevoEstado } : solicitud
+        )
+      );
+    } catch (error) {
+      console.log("<<Error updating estado>>", error);
     }
   };
 
@@ -85,6 +98,7 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch }) {
             <th>Cantidad</th>
             <th>Estado</th>
             <th>Fecha Solicitud</th>
+            <th>Recibido</th> {/* Nueva columna */}
           </tr>
         </thead>
         <tbody>
@@ -96,6 +110,13 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch }) {
               <td>{solicitud.cantidad} {solicitud.tipoCantidad}</td>
               <td>{solicitud.estado}</td>
               <td>{new Date(solicitud.fechaSolicitud).toLocaleString()}</td>
+              <td>
+                <input
+                  type="checkbox"
+                  checked={solicitud.estado === 'Recibido'}
+                  onChange={() => updateEstado(solicitud.idSolicitud, 'Recibido')}
+                />
+              </td>
             </tr>
           ))}
         </tbody>

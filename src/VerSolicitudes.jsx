@@ -14,12 +14,11 @@ function VerSolicitudes() {
   useEffect(() => {
     const fetchDataSolicitudes = async () => {
       try {
-        const response = await axios.get(`http://172.30.190.47/5000/solicitudes/area/${IdentLinea}`, {
+        const response = await axios.get(`http://172.30.190.47:5000/solicitudes/area/${IdentLinea}`, {
           params: {
-            fecha: fechaFiltro // Agregar el fechaFiltro aquí
+            fecha: fechaFiltro
           }
         });
-        console.log("Datos AAAAquiiiii", response.data);
         setDataSolicitudes(response.data);
       } catch (error) {
         console.log("<<Error fetching data>>", error);
@@ -56,9 +55,9 @@ function VerSolicitudes() {
     switch (estado) {
       case 'Pendiente':
         return '#ffcccc'; // Rojo claro
-      case 'En proceso':
-        return '#ffffcc'; // Amarillo claro
-      case 'Entregado':
+      case 'Recibido':
+        return '#008f39'; // Verde
+      case 'Enviado':
         return '#ccffcc'; // Verde claro
       default:
         return '#ffffff'; // Blanco por defecto
@@ -120,9 +119,6 @@ function VerSolicitudes() {
   const turnoActual = getTurno();
   const solicitudesTurnoActual = filteredSolicitudes.filter(solicitud => solicitud.Turno === turnoActual);
 
-  // Obtener líneas únicas para el combobox
-  const lineasUnicas = [...new Set(dataSolicitudes.map(solicitud => solicitud.linea.nombre))];
-
   return (
     <div className="solicitudes-container">
       <h1>Lista de Solicitudes de Materiales</h1>
@@ -130,7 +126,8 @@ function VerSolicitudes() {
         <select value={estadoFiltro} onChange={(e) => setEstadoFiltro(e.target.value)}>
           <option value="">Filtrar por Estado</option>
           <option value="Pendiente">Pendiente</option>
-          <option value="Entregado">Entregado</option>
+          <option value="Enviado">Enviado</option>
+          <option value="Recibido">Recibido</option>
         </select>
         <input 
           type="date" 
@@ -170,10 +167,10 @@ function VerSolicitudes() {
                     Marcar como Pendiente
                   </button>
                   <button 
-                    onClick={() => updateEstado(solicitud.idSolicitud, 'Entregado')}
-                    disabled={solicitud.estado === 'Entregado'}
+                    onClick={() => updateEstado(solicitud.idSolicitud, 'Enviado')}
+                    disabled={solicitud.estado === 'Enviado'}
                   >
-                    Marcar como Entregado
+                    Marcar como Enviado
                   </button>
                 </td>
               </tr>

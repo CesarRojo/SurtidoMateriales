@@ -1,0 +1,36 @@
+.tabla-materiales-container {
+    padding: 20px;
+  }
+  
+  .tabla-materiales {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .tabla-materiales th, .tabla-materiales td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .tabla-materiales th {
+    background-color: #f2f2f2;
+  }
+
+  .exportar-boton {
+    margin-bottom: 20px;
+    padding: 10px 15px;
+    background-color: #4CAF50; /* Color de fondo */
+    color: white; /* Color del texto */
+    border: none; /* Sin borde */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer; /* Cambia el cursor al pasar el mouse */
+  }
+  
+  .exportar-boton:hover {
+    background-color: #45a049; /* Color de fondo al pasar el mouse */
+  }
+
+  img {
+    margin: 0;
+  }

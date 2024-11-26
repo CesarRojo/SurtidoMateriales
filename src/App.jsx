@@ -2,6 +2,7 @@ import PedirMaterial from "./PedirMaterial"
 import VerSolicitudes from "./VerSolicitudes"
 import MenuLineasComponent from "./MenuLineasComponent/MenuLineasComponent";
 import MenuPrincipal from './MenuPrincipal/MenuPrincipal'
+import PanelAdminComponent from "./PanelAdminComponent/PanelAdminComponent";
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
@@ -13,6 +14,7 @@ function App() {
         <Route path="/:IdentLinea" element={<PedirMaterial />} />
         <Route path="/solicitudes" element={<MenuLineasComponent />} />
         <Route path="/solicitudes/:IdentLinea" element={<VerSolicitudes />} />
+        <Route path="/admin" element={<PanelAdminComponent />} />
       </Routes>
     </Router>
   );

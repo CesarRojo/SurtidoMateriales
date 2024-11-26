@@ -24,6 +24,15 @@ select, input[type="number"] {
     font-size: 16px; /* Tamaño de fuente */
 }
 
+input[type="text"] {
+    width: 91%; /* Ancho completo */
+    padding: 10px; /* Espaciado interno */
+    margin-bottom: 15px; /* Espacio entre campos */
+    border: 1px solid #ccc; /* Borde gris */
+    border-radius: 4px; /* Bordes redondeados */
+    font-size: 16px; /* Tamaño de fuente */
+}
+
 input[type="number"]{
     width: 91%;
 }
@@ -57,7 +66,7 @@ button:hover {
     width: 80%;
 }
 
-img {
+.logoATR {
     display: block; /* Asegura que la imagen esté en su propia línea */
     margin: 120% auto; /* Centra la imagen y agrega espacio superior e inferior */
     max-width: 100%; /* Asegura que la imagen no exceda el ancho del contenedor */
