@@ -3,6 +3,7 @@ import './PanelAdministracion.css'; // Asegúrate de tener el archivo CSS corres
 
 // Importa los componentes que deseas mostrar
 import CodigosBarra from "../CodigosBarraComponent/CodigosBarra";
+import InsertMaterComponent from "../InsertMaterComponent/InsertMaterComponent";
 
 function PanelAdministracion() {
   const [componenteActivo, setComponenteActivo] = useState(null);
@@ -16,8 +17,8 @@ function PanelAdministracion() {
     switch (componenteActivo) {
       case 'codigos-barra':
         return <CodigosBarra />;
-      // case 'insertar-materiales':
-      //   return <InsertarMateriales />;
+      case 'insertar-materiales':
+        return <InsertMaterComponent />;
       // case 'insertar-lineas':
       //   return <InsertarLineas />;
       default:

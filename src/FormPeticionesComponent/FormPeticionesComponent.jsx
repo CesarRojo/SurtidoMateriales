@@ -14,8 +14,11 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
 
         const fetchDataMaterial = async () => {
             try {
-                const response = await axios.get(`http://172.30.190.47:5000/material/`);
-                console.log("Datos Materiales RAAAAH", response.data);
+                const response = await axios.get(`http://172.30.190.47:5000/material/ordered`, {
+                    params: {
+                        id: IdLinea, //Esto para que aparezcan los materiales correspondientes de cada FLOOR
+                    }
+                });
                 const formattedMaterials = response.data.map(material => ({
                     value: material.idMaterial,
                     label: material.numero
@@ -98,6 +101,7 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
                         onChange={setSelectedMaterial}
                         placeholder="Seleccione o busque un material"
                         isSearchable // Habilita la búsqueda
+                        required
                     />
                 </div>
 
@@ -107,6 +111,7 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
                         id="type"
                         value={selectedType}
                         onChange={(e) => setSelectedType(e.target.value)}
+                        required
                     >
                         <option value="">Seleccione un tipo</option>
                         <option value="pieza">Pieza</option>
@@ -123,10 +128,11 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
                         value={quantity}
                         onChange={(e) => setQuantity(e.target.value)}
                         min="1"
+                        required
                     />
                 </div>
 
-                {errorMessage && <p className="error-message">{errorMessage}</p>} {/* Mostrar mensaje de error */}
+                {/* {errorMessage && <p className="error-message">{errorMessage}</p>} Mostrar mensaje de error */}
 
                 <button type="submit">Enviar</button>
             </form>

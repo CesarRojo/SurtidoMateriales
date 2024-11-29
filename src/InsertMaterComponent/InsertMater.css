@@ -1,0 +1,47 @@
+.material-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.material-tablehd {
+    background-color: #f2f2f2;
+}
+
+.material-table th, .material-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.material-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.material-table tr:hover {
+    background-color: #f1f1f1;
+}
+
+.insert-form {
+    margin-bottom: 20px;
+}
+
+.insert-form input {
+    margin-right: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.insert-form button {
+    padding: 8px 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.insert-form button:hover {
+    background-color: #45a049;
+}

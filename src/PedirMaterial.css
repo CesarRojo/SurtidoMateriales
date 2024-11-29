@@ -25,14 +25,15 @@ body {
 }
 
 /* Media queries para pantallas más pequeñas */
-@media (max-width: 768px) {
+@media (max-width: 895px) {
     .form-container {
-        width: 30%; /* Aumenta el ancho en pantallas más pequeñas */
-        max-width: 100%; /* Asegúrate de que no exceda el ancho de la pantalla */
+        width: 100%; /* En pantallas muy pequeñas, el formulario ocupa todo el ancho */
+        position: relative; /* Cambiar a posición relativa para evitar problemas de scroll */
+        height: auto; /*Permitir que la altura se ajuste automáticamente*/
     }
 
     .solicitudes-contenedor {
-        width: 70%; /* Ajusta el ancho de las solicitudes */
+        width: 100%; /* Las solicitudes también ocupan todo el ancho*/
     }
 }
 
@@ -40,10 +41,10 @@ body {
     .form-container {
         width: 100%; /* En pantallas muy pequeñas, el formulario ocupa todo el ancho */
         position: relative; /* Cambiar a posición relativa para evitar problemas de scroll */
-        height: auto; /* Permitir que la altura se ajuste automáticamente */
+        height: auto; /*Permitir que la altura se ajuste automáticamente*/
     }
 
     .solicitudes-contenedor {
-        width: 100%; /* Las solicitudes también ocupan todo el ancho */
+        width: 100%; /* Las solicitudes también ocupan todo el ancho*/
     }
 }

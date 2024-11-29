@@ -98,7 +98,7 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch }) {
             <th>Cantidad</th>
             <th>Estado</th>
             <th>Fecha Solicitud</th>
-            <th>Recibido</th> {/* Nueva columna */}
+            <th>Recibido</th>
           </tr>
         </thead>
         <tbody>

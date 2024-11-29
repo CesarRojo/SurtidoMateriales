@@ -39,13 +39,43 @@ const styles = StyleSheet.create({
 
 const CodigosBarra = () => {
   const [materiales, setMateriales] = useState([]);
+  const [lineas, setLineas] = useState([]); // Estado para las líneas
+  const [selectedLinea, setSelectedLinea] = useState(""); // Estado para la línea seleccionada
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
+    const fetchLineas = async () => {
+      try {
+        const response = await axios.get('http://172.30.190.47:5000/lines');
+        const uniqueLineas = [];
+        const seenFloors = new Set(); // Usar un Set para rastrear los Floors que ya hemos visto
+  
+        response.data.forEach(linea => {
+          if (!seenFloors.has(linea.Floor)) { // Verifica si ya hemos visto este Floor
+            seenFloors.add(linea.Floor); // Marca este Floor como visto
+            uniqueLineas.push(linea); // Agrega la línea a la lista de únicas
+          }
+        });
+  
+        setLineas(uniqueLineas);
+      } catch (err) {
+        setError("Error al cargar las líneas");
+        console.error(err);
+      }
+    };
+  
+    fetchLineas();
+  }, []);
+
+  useEffect(() => {
     const fetchMateriales = async () => {
       try {
-        const response = await axios.get('http://172.30.190.47:5000/material/ordered');
+        const response = await axios.get('http://172.30.190.47:5000/material/ordered', {
+          params: {
+            id: selectedLinea,
+          }
+        });
         setMateriales(response.data);
       } catch (err) {
         setError("Error al cargar los materiales");
@@ -56,7 +86,9 @@ const CodigosBarra = () => {
     };
 
     fetchMateriales();
-  }, []);
+  }, [selectedLinea]);
+
+
 
   const generateBarcode = (value) => {
     const canvas = document.createElement("canvas");
@@ -77,10 +109,9 @@ const CodigosBarra = () => {
     return <div>{error}</div>;
   }
 
-  // Componente PDF con tamaño de página doble carta
   const MyDocument = () => (
     <Document>
-      <Page size={[1100, 1700]} style={{ padding: 10 }}> {/* Tamaño en puntos (1 pulgada = 72 puntos) */}
+      <Page size={[1100, 1700]} style={{ padding: 10 }}>
         <View style={styles.table}>
           <View style={styles.tableRow}>
             <View style={styles.tableCol}><Text style={styles.tableCell}>Cantidad</Text></View>
@@ -103,19 +134,43 @@ const CodigosBarra = () => {
     </Document>
   );
 
+  const handleLineaChange = (e) => {
+    const selectedIdLinea = e.target.value;
+    setSelectedLinea(selectedIdLinea);
+    console.log("ID Línea seleccionada:", selectedIdLinea); // Muestra el ID de la línea seleccionada
+  };
+
   return (
     <div className="tabla-materiales-container">
       <h4>Tabla de Materiales</h4>
       <PDFDownloadLink document={<MyDocument />} fileName="tabla_materiales.pdf">
         {({ loading }) => (loading ? 'Cargando documento...' : 'Exportar a PDF')}
       </PDFDownloadLink>
+      
+      {/* Combobox para seleccionar la línea */}
+      <div>
+        <label htmlFor="lineas">Selecciona una línea:</label>
+        <select
+          id="lineas"
+          value={selectedLinea}
+          onChange={handleLineaChange}
+        >
+          <option value="">Seleccione una línea</option>
+          {lineas.map((linea) => (
+            <option key={linea.idLinea} value={linea.idLinea}>
+              {linea.Floor}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <table className="tabla-materiales">
         <thead>
           <tr>
             <th>ID Material</th>
             <th>Número</th>
             <th>Nombre</th>
-            < th>Código de Barra</th>
+            <th>Código de Barra</th>
           </tr>
         </thead>
         <tbody>
@@ -136,3 +191,4 @@ const CodigosBarra = () => {
 };
 
 export default CodigosBarra;
+//Haz que el combobox no me muestre repetidos de FLOOR y que me deje solo el primero que encuentre de los repetidos

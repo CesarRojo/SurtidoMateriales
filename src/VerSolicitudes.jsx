@@ -143,6 +143,7 @@ function VerSolicitudes() {
             <tr>
               <th>ID Solicitud</th>
               <th>Línea</th>
+              <th>Rack</th>
               <th>Material</th>
               <th>Cantidad</th>
               <th>Estado</th>
@@ -155,6 +156,7 @@ function VerSolicitudes() {
               <tr key={solicitud.idSolicitud} style={{ backgroundColor: getBackgroundColor(solicitud.estado) }}>
                 <td>{solicitud.idSolicitud}</td>
                 <td>{solicitud.linea.nombre}</td>
+                <td>{solicitud.material && solicitud.material.rack ? solicitud.material.rack.nombre : 'Sin Rack'}</td>
                 <td>{solicitud.material.numero}</td>
                 <td>{solicitud.cantidad} {solicitud.tipoCantidad}</td>
                 <td>{solicitud.estado}</td>
