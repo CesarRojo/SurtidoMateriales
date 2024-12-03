@@ -49,10 +49,10 @@ const CodigosBarra = () => {
       try {
         const response = await axios.get('http://172.30.190.47:5000/lines');
         const uniqueLineas = [];
-        const seenFloors = new Set(); // Usar un Set para rastrear los Floors que ya hemos visto
+        const seenFloors = new Set(); // Usar un Set para rastrear los Floors que ya fueron vistos
   
         response.data.forEach(linea => {
-          if (!seenFloors.has(linea.Floor)) { // Verifica si ya hemos visto este Floor
+          if (!seenFloors.has(linea.Floor)) { // Verifica si ya se ha visto este Floor
             seenFloors.add(linea.Floor); // Marca este Floor como visto
             uniqueLineas.push(linea); // Agrega la línea a la lista de únicas
           }
@@ -142,14 +142,8 @@ const CodigosBarra = () => {
 
   return (
     <div className="tabla-materiales-container">
-      <h4>Tabla de Materiales</h4>
-      <PDFDownloadLink document={<MyDocument />} fileName="tabla_materiales.pdf">
-        {({ loading }) => (loading ? 'Cargando documento...' : 'Exportar a PDF')}
-      </PDFDownloadLink>
-      
-      {/* Combobox para seleccionar la línea */}
-      <div>
-        <label htmlFor="lineas">Selecciona una línea:</label>
+      <label htmlFor="lineas">Selecciona una línea:</label>
+      <div className="export-container">
         <select
           id="lineas"
           value={selectedLinea}
@@ -162,6 +156,9 @@ const CodigosBarra = () => {
             </option>
           ))}
         </select>
+        <PDFDownloadLink document={<MyDocument />} fileName="tabla_materiales.pdf">
+          {({ loading }) => (loading ? 'Cargando documento...' : 'Exportar a PDF')}
+        </PDFDownloadLink>
       </div>
 
       <table className="tabla-materiales">
@@ -191,4 +188,3 @@ const CodigosBarra = () => {
 };
 
 export default CodigosBarra;
-//Haz que el combobox no me muestre repetidos de FLOOR y que me deje solo el primero que encuentre de los repetidos

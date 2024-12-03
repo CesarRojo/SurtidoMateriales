@@ -164,13 +164,13 @@ function VerSolicitudes() {
                 <td>
                   <button 
                     onClick={() => updateEstado(solicitud.idSolicitud, 'Pendiente')}
-                    disabled={solicitud.estado === 'Pendiente'}
+                    disabled={solicitud.estado === 'Pendiente' || solicitud.estado === 'Recibido'}
                   >
                     Marcar como Pendiente
                   </button>
                   <button 
                     onClick={() => updateEstado(solicitud.idSolicitud, 'Enviado')}
-                    disabled={solicitud.estado === 'Enviado'}
+                    disabled={solicitud.estado === 'Enviado' || solicitud.estado === 'Recibido'}
                   >
                     Marcar como Enviado
                   </button>

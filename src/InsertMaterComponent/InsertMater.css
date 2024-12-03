@@ -35,7 +35,7 @@
 
 .insert-form button {
     padding: 8px 12px;
-    background-color: #4CAF50;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 4px;
@@ -43,5 +43,24 @@
 }
 
 .insert-form button:hover {
-    background-color: #45a049;
+    background-color: #0056b3;
+}
+
+.form-filters-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.insert-form {
+    display: flex;
+    gap: 10px; /* Espacio entre los elementos del formulario */
+}
+
+.filtros {
+    margin-left: 20px; /* Espacio entre el formulario y el filtro */
+}
+
+.mat-container {
+    padding: 0 20px;
 }

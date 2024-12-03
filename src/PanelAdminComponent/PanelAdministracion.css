@@ -1,28 +1,46 @@
 .panel-container {
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .panel-cards {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 20px;
-  }
-  
-  .panel-card {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    padding: 20px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .panel-card:hover {
-    background-color: #e0e0e0;
-  }
-  
-  .panel-card h2 {
-    margin: 0;
-  }
+  text-align: center;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center; /* Alinea verticalmente el título y las tarjetas */
+  justify-content: center; /* Centra el contenido del header */
+  margin-bottom: 20px; /* Espacio entre el header y las tarjetas */
+  background-color: black;
+}
+
+.panel-title {
+  margin-right: 20px; /* Espacio entre el título y las tarjetas */
+  color: white;
+}
+
+.panel-cards {
+  display: flex;
+  gap: 10px; /* Espacio entre las tarjetas */
+}
+
+.panel-card {
+  color: white;
+  padding: 10px 15px; /* Ajusta el padding para que sea más pequeño */
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.panel-card:hover {
+  background-color: #e0e0e0;
+}
+
+.panel-card h2 {
+  margin: 0;
+  font-size: 14px; /* Ajusta el tamaño de la fuente para que sea más pequeño */
+}
+
+.logoATR-panadm {
+  width: 100px;
+}
+
+.panel-title-container {
+  flex-grow: 1; /* Permite que el contenedor del título ocupe el espacio disponible */
+  text-align: center; /* Centra el texto dentro de este contenedor */
+}

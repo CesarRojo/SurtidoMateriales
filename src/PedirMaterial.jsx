@@ -10,6 +10,7 @@ function PedirMaterial() {
   const [dataLinea, setDataLinea] = useState(null);
   const [isValid, setIsValid] = useState(false);
   const [nombreLinea, setNombreLinea] = useState(null);
+  const [floorLinea, setFloorLinea] = useState(null);
   const [idLinea, setIdLinea] = useState(null);
   const [shouldFetchSolicitudes, setShouldFetchSolicitudes] = useState(false); // Estado para controlar la actualización
   const { IdentLinea } = useParams();
@@ -39,6 +40,7 @@ function PedirMaterial() {
       if (isIdentLineaValid) {
         const lineaEncontrada = dataLinea.find(linea => linea.IdentificadorLinea === parseInt(IdentLinea));
         setNombreLinea(lineaEncontrada ? lineaEncontrada.nombre : null);
+        setFloorLinea(lineaEncontrada ? lineaEncontrada.Floor : null);
         setIdLinea(lineaEncontrada ? lineaEncontrada.idLinea : null);
       } else {
         setNombreLinea(null);
@@ -60,6 +62,7 @@ function PedirMaterial() {
                     <h1>Línea {nombreLinea}</h1>
                     <FormPeticionesComponent 
                         IdLinea={idLinea}
+                        Floor={floorLinea}
                         onFormSubmit={handleFormSubmit} 
                     />
                 </div>

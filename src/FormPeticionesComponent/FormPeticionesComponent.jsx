@@ -1,9 +1,11 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Select from 'react-select';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './FormPeticiones.css'
 
-function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
+function FormPeticionesComponent({ IdLinea, onFormSubmit, Floor }) {
     const [dataMaterial, setDataMaterial] = useState([]);
     const [selectedMaterial, setSelectedMaterial] = useState(null);
     const [selectedType, setSelectedType] = useState("");
@@ -14,9 +16,10 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
 
         const fetchDataMaterial = async () => {
             try {
-                const response = await axios.get(`http://172.30.190.47:5000/material/ordered`, {
+                console.log(Floor);
+                const response = await axios.get(`http://172.30.190.47:5000/material/floor`, {
                     params: {
-                        id: IdLinea, //Esto para que aparezcan los materiales correspondientes de cada FLOOR
+                        floor: Floor, //Esto para que aparezcan los materiales correspondientes de cada FLOOR
                     }
                 });
                 const formattedMaterials = response.data.map(material => ({
@@ -75,6 +78,7 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
         try {
             const response = await axios.post(`http://172.30.190.47:5000/solicitudes/`, newRequest);
             console.log("Solicitud enviada con éxito:", response.data);
+            toast.success ("Solicitud enviada con éxito!");
             // Limpiar el formulario
             setSelectedMaterial(null);
             setSelectedType("");
@@ -85,11 +89,13 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit }) {
 
         } catch (error) {
             console.error("Error al enviar la solicitud:", error);
+            toast.error("Error al enviar la solicitud. Intente nuevamente.");
         }
     };
 
     return (
         <>
+            <ToastContainer />
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="material">Material:</label>
