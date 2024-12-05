@@ -71,9 +71,9 @@ const CodigosBarra = () => {
   useEffect(() => {
     const fetchMateriales = async () => {
       try {
-        const response = await axios.get('http://172.30.190.47:5000/material/ordered', {
+        const response = await axios.get('http://172.30.190.47:5000/material/floor', {
           params: {
-            id: selectedLinea,
+            floor: selectedLinea,
           }
         });
         setMateriales(response.data);
@@ -151,7 +151,7 @@ const CodigosBarra = () => {
         >
           <option value="">Seleccione una línea</option>
           {lineas.map((linea) => (
-            <option key={linea.idLinea} value={linea.idLinea}>
+            <option key={linea.idLinea} value={linea.Floor}>
               {linea.Floor}
             </option>
           ))}

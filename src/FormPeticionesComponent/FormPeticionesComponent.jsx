@@ -16,7 +16,6 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit, Floor }) {
 
         const fetchDataMaterial = async () => {
             try {
-                console.log(Floor);
                 const response = await axios.get(`http://172.30.190.47:5000/material/floor`, {
                     params: {
                         floor: Floor, //Esto para que aparezcan los materiales correspondientes de cada FLOOR

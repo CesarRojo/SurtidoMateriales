@@ -1,8 +1,10 @@
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useState, useEffect } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './InsertMater.css';
+import EditMaterialModal from './EditMaterialModal';
+import Select from 'react-select'; // Importar Select
 
 function InsertMaterComponent() {
     const [dataMater, setDataMater] = useState([]);
@@ -13,12 +15,15 @@ function InsertMaterComponent() {
     const [nombre, setNombre] = useState("");
     const [filterFloor, setFilterFloor] = useState("");
     const [selectedRackId, setSelectedRackId] = useState("");
+    const [selectedMaterial, setSelectedMaterial] = useState(null); // Para el select de material
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [filteredMaterials, setFilteredMaterials] = useState([]); // State for filtered materials
 
     const fetchData = async () => {
         try {
             const response = await axios.get(`http://172.30.190.47:5000/material`);
-            console.log(response.data);
             setDataMater(response.data);
+            setFilteredMaterials(response.data); // Inicializar los materiales filtrados
         } catch (error) {
             console.error("Error fetching materials");
         }
@@ -64,10 +69,8 @@ function InsertMaterComponent() {
 
         if (selectedLine) {
             setSelectedFloor(selectedLine.Floor);
-            console.log("Floor seleccionado:", selectedLine.Floor);
         } else {
             setSelectedFloor("");
-            console.error("No se encontró la línea con idLinea:", selectedIdLinea);
         }
     };
 
@@ -86,10 +89,7 @@ function InsertMaterComponent() {
             setNombre("");
             setSelectedFloor("");
             setSelectedRackId("");
-
             fetchData();
-
-            // Muestra la alerta de éxito
             toast.success("Material insertado correctamente!");
         } catch (error) {
             console.error("Error inserting material");
@@ -97,7 +97,33 @@ function InsertMaterComponent() {
         }
     };
 
-    const filteredMaterials = filterFloor ? dataMater.filter(material => material.floor === filterFloor) : dataMater;
+    const handleRowClick = (material) => {
+        setSelectedMaterial(material);
+        setIsModalOpen(true);
+    };
+
+    const handleUpdateMaterial = (updatedMaterial) => {
+        setDataMater(dataMater.map(material => 
+            material.idMaterial === updatedMaterial.idMaterial ? updatedMaterial : material
+        ));
+        toast.success("Material actualizado correctamente!");
+    };
+
+    const handleDeleteMaterial = (idMaterial) => {
+        setDataMater(dataMater.filter(material => material.idMaterial !== idMaterial));
+        toast.success("Material eliminado correctamente!");
+    };
+
+    const handleMaterialSelectChange = (selectedOption) => {
+        setSelectedMaterial(selectedOption);
+        if (selectedOption) {
+            setFilteredMaterials(dataMater.filter(material => material.numero === selectedOption.label ));
+        } else {
+            setFilteredMaterials(dataMater);
+        }
+    };
+
+    const filteredMaterialsToDisplay = filterFloor ? filteredMaterials.filter(material => material.floor === filterFloor) : filteredMaterials;
 
     return (
         <div className="mat-container">
@@ -136,7 +162,6 @@ function InsertMaterComponent() {
                         id="racks"
                         value={selectedRackId}
                         onChange={(e) => setSelectedRackId(e.target.value)}
-                        required
                     >
                         <option value="">Seleccione un RACK</option>
                         {dataRacks.map((rack) => (
@@ -150,6 +175,17 @@ function InsertMaterComponent() {
                 </form>
 
                 <div className="filtros">
+                 <h2>Filtros busqueda</h2>
+                  <div className="filtros-2">
+                    <Select
+                        id="material-select"
+                        isClearable
+                        options={dataMater.map(material => ({ value: material.idMaterial, label: material.numero }))}
+                        value={selectedMaterial}
+                        onChange={handleMaterialSelectChange}
+                        placeholder="Seleccione o busque un material"
+                        isSearchable
+                    />
                     <select
                         value={filterFloor}
                         onChange={(e) => setFilterFloor(e.target.value)}
@@ -161,6 +197,7 @@ function InsertMaterComponent() {
                             </option>
                         ))}
                     </select>
+                  </div>
                 </div>
             </div>
 
@@ -171,12 +208,12 @@ function InsertMaterComponent() {
                         <th>Número</th>
                         <th>Nombre</th>
                         <th>Floor</th>
-                        <th>ID Rack</th>
+                        <th>Rack</th>
                     </tr>
                 </thead>
                 <tbody className="material-tablebd">
-                    {filteredMaterials.map((material, index) => (
-                        <tr key={index}>
+                    {filteredMaterialsToDisplay.map((material, index) => (
+                        <tr key={index} onClick={() => handleRowClick(material)}>
                             <td>{material.idMaterial}</td>
                             <td>{material.numero}</td>
                             <td>{material.nombre}</td>
@@ -187,6 +224,14 @@ function InsertMaterComponent() {
                 </tbody>
             </table>
             <ToastContainer />
+            <EditMaterialModal 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                material={selectedMaterial} 
+                onUpdate={handleUpdateMaterial} 
+                onDelete={handleDeleteMaterial} 
+                fetchData={fetchData} 
+            />
         </div>
     );
 }

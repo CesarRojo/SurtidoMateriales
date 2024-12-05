@@ -89,7 +89,7 @@
     vertical-align: middle;
   }
   
-  button {
+  td button {
     padding: 8px 12px;
     margin: 0 5px;
     border: none;
@@ -100,11 +100,11 @@
     transition: background-color 0.3s;
   }
   
-  button:hover {
+  td button:hover {
     background-color: #0056b3;
   }
   
-  button:disabled {
+  td button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
   }

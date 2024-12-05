@@ -2,11 +2,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './InsertRack.css'
+import './InsertRack.css';
+import EditRackModal from './EditRackModal';
 
 function InsertRackComponent() {
     const [dataRack, setDataRack] = useState([]);
     const [nombre, setNombre] = useState('');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedRack, setSelectedRack] = useState(null);
     
     const fetchRacks = async () => {
         try {
@@ -34,6 +37,23 @@ function InsertRackComponent() {
         }
     }
 
+    const handleRowClick = (rack) => {
+        setSelectedRack(rack);
+        setIsModalOpen(true);
+    };
+
+    const handleUpdateRack = (updatedRack) => {
+        setDataRack(dataRack.map(rack => 
+            rack.idRack === updatedRack.idRack ? updatedRack : rack
+        ));
+        toast.success("Rack actualizado correctamente!");
+    };
+
+    const handleDeleteRack = (idRack) => {
+        setDataRack(dataRack.filter(rack => rack.idRack !== idRack));
+        toast.success("Rack eliminado correctamente!");
+    };
+
     useEffect(() => {
         fetchRacks();
     }, [])
@@ -52,7 +72,7 @@ function InsertRackComponent() {
                 <button type="submit">Agregar rack</button>
             </form>
             <table className="material-table">
-                <thead className="material-tablehd">
+                <thead class Name="material-tablehd">
                     <tr>
                         <th>ID Rack</th>
                         <th>Nombre Rack</th>
@@ -60,7 +80,7 @@ function InsertRackComponent() {
                 </thead>
                 <tbody className="material-tablebd">
                     {dataRack.map((rack, index) => (
-                        <tr key={index}>
+                        <tr key={index} onClick={() => handleRowClick(rack)}>
                             <td>{rack.idRack}</td>
                             <td>{rack.nombre}</td>
                         </tr>
@@ -68,6 +88,14 @@ function InsertRackComponent() {
                 </tbody>
             </table>
             <ToastContainer />
+            <EditRackModal 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                rack={selectedRack} 
+                onUpdate={handleUpdateRack} 
+                onDelete={handleDeleteRack}
+                fetchRacks={fetchRacks}
+            />
         </div>
     );
 }

@@ -72,7 +72,7 @@ function MenuLineasComponent() {
             <div 
               className={`linea-card ${cardClass}`} // Aplica la clase dinámica
               key={linea.idLinea} 
-              onClick={() => handleCardClick(linea.IdentificadorLinea)}
+              onClick={() => handleCardClick(linea.idLinea)}
             >
               <h2>{linea.nombre}</h2>
               <div className="notification-bubble">{cantidadSolicitudes}</div>

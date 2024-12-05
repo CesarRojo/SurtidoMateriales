@@ -22,8 +22,8 @@ function MenuLineasPrincipal() {
   }, []);
 
   // Función para manejar el clic en la tarjeta
-  const handleCardClick = (IdentificadorLinea) => {
-    navigate(`/${IdentificadorLinea}`); // Esto llevará a la pantalla para ver la interfaz de cada linea
+  const handleCardClick = (idLinea) => {
+    navigate(`/${idLinea}`); // Esto llevará a la pantalla para ver la interfaz de cada linea
   };
 
   return (
@@ -35,7 +35,7 @@ function MenuLineasPrincipal() {
             <div 
               className="linea-card" 
               key={linea.idLinea} 
-              onClick={() => handleCardClick(linea.IdentificadorLinea)} // Agrega el manejador de clic
+              onClick={() => handleCardClick(linea.idLinea)} // Agrega el manejador de clic
             >
               <h2>{linea.nombre}</h2>
             </div>

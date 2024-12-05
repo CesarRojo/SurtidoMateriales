@@ -61,6 +61,20 @@
     margin-left: 20px; /* Espacio entre el formulario y el filtro */
 }
 
+.filtros-2 {
+    margin-left: 20px; /* Espacio entre el formulario y el filtro */
+    display: flex;
+}
+
 .mat-container {
     padding: 0 20px;
+}
+
+.material-tablebd td {
+    cursor: pointer;
+}
+
+#material-select {
+    width: 300px;
+    margin-right: 10px;
 }

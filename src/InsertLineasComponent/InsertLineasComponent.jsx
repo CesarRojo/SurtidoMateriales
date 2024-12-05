@@ -2,15 +2,16 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './InsertLines.css'
+import './InsertLines.css';
+import EditLineModal from './EditLineasModal';
 
 const InsertLineasComponent = () => {
   const [lines, setLines] = useState([]);
   const [nombre, setNombre] = useState('');
-  const [identificadorLinea, setIdentificadorLinea] = useState('');
   const [floor, setFloor] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedLine, setSelectedLine] = useState(null);
 
-  // Función para obtener las líneas desde la API
   const fetchLines = async () => {
     try {
       const response = await axios.get('http://172.30.190.47:5000/lines');
@@ -20,27 +21,40 @@ const InsertLineasComponent = () => {
     }
   };
 
-  // Función para manejar la inserción de una nueva línea
   const handleAddLine = async (e) => {
     e.preventDefault();
     try {
-      const newLine = { nombre, IdentificadorLinea: Number(identificadorLinea), Floor: floor };
+      const newLine = { nombre, Floor: floor };
       await axios.post('http://172.30.190.47:5000/lines', newLine);
-      fetchLines(); // Refrescar la lista después de agregar
+      fetchLines();
       setNombre('');
-      setIdentificadorLinea('');
       setFloor('');
-
-      // Muestra la alerta de éxito
-      toast.success("Linea insertada correctamente!");
+      toast.success("Línea insertada correctamente!");
     } catch (error) {
       console.error('Error adding line:', error);
-      toast.error("Error al insertar la linea!");
+      toast.error("Error al insertar la línea!");
     }
   };
 
+  const handleRowClick = (line) => {
+    setSelectedLine(line);
+    setIsModalOpen(true);
+  };
+
+  const handleUpdateLine = (updatedLine) => {
+    setLines(lines.map(line => 
+        line.idLinea === updatedLine.idLinea ? updatedLine : line
+    ));
+    toast.success("Línea actualizada correctamente!");
+  };
+
+  const handleDeleteLine = (idLinea) => {
+    setLines(lines.filter(line => line.idLinea !== idLinea));
+    toast.success("Línea eliminada correctamente!");
+  };
+
   useEffect(() => {
-    fetchLines(); // Obtener líneas al montar el componente
+    fetchLines();
   }, []);
 
   return (
@@ -52,13 +66,6 @@ const InsertLineasComponent = () => {
             placeholder="Nombre de la línea"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
-            required
-        />
-        <input
-            type="number"
-            placeholder="Identificador de la línea"
-            value={identificadorLinea}
-            onChange={(e) => setIdentificadorLinea(e.target.value)}
             required
         />
         <input
@@ -74,22 +81,30 @@ const InsertLineasComponent = () => {
       <table className="material-table">
         <thead className="material-tablehd">
           <tr>
+            <th>ID Linea</th>
             <th>Nombre</th>
-            <th>Identificador</th>
             <th>FLOOR</th>
           </tr>
         </thead>
         <tbody className="material-tablebd">
           {lines.map((line, index) => (
-            <tr key={index}>
+            <tr key={index} onClick={() => handleRowClick(line)}>
+              <td>{line.idLinea}</td>
               <td>{line.nombre}</td>
-              <td>{line.IdentificadorLinea}</td>
               <td>{line.Floor}</td>
             </tr>
           ))}
         </tbody>
       </table>
       <ToastContainer />
+      <EditLineModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        line={selectedLine} 
+        onUpdate={handleUpdateLine} 
+        onDelete={handleDeleteLine}
+        fetchLines={fetchLines}
+      />
     </div>
   );
 };

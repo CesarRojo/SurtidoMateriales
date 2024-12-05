@@ -35,7 +35,7 @@ function PanelAdministracion() {
       <header className="panel-header">
         <img src="logo.png" alt="logoatr" className="logoATR-panadm"/>
         <div className="panel-title-container">
-          <h1 className="panel-title">Panel de Administración</h1>
+          <h1 className="panel-title">Panel de Administración Planta 4</h1>
         </div>
         <div className="panel-cards">
           <div 

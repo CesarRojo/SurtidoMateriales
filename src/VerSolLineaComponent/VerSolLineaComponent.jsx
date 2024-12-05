@@ -1,28 +1,32 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import './VerSolicitudesLinea.css'; // Asegúrate de crear este archivo CSS para estilos
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import './VerSolicitudesLinea.css';
+import EditSolicitudModal from './EditSolicitudModal';
 
-function VerSolLineaComponent({ IdentLinea, shouldFetch }) {
+function VerSolLineaComponent({ IdentLinea, shouldFetch, Floor }) {
   const [dataSolicitudes, setDataSolicitudes] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedSolicitud, setSelectedSolicitud] = useState(null);
+
+  const fetchDataSolicitudes = async () => {
+    try {
+      const response = await axios.get(`http://172.30.190.47:5000/solicitudes/area/${IdentLinea}`, {
+        params: {
+          fecha: new Date().toISOString().split('T')[0]
+        }
+      });
+      setDataSolicitudes(response.data);
+    } catch (error) {
+      console.log("<<Error fetching data>>", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchDataSolicitudes = async () => {
-      try {
-        const response = await axios.get(`http://172.30.190.47:5000/solicitudes/area/${IdentLinea}`, {
-          params: {
-            fecha: new Date().toISOString().split('T')[0]
-          }
-        });
-        setDataSolicitudes(response.data);
-      } catch (error) {
-        console.log("<<Error fetching data>>", error);
-      }
-    };
-
     fetchDataSolicitudes();
-  }, [IdentLinea, shouldFetch]); // Agrega shouldFetch como dependencia 
+  }, [IdentLinea, shouldFetch]);
 
-  // Función para determinar el color de fondo según el estado de la solicitud
   const getBackgroundColor = (estado) => {
     switch (estado) {
       case 'Pendiente':
@@ -36,29 +40,26 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch }) {
     }
   };
 
-  // Función para obtener el turno actual
   const getTurno = () => {
     const currentHour = new Date().getHours();
     const currentMinutes = new Date().getMinutes();
 
-    // Si la hora es entre 7:00 AM (7) y 4:30 PM (16:30)
     if (currentHour === 16 && currentMinutes >= 0 && currentMinutes < 30) {
-        return 'A'; // Incluye hasta las 16:29
+        return 'A';
     } else if (currentHour >= 7 && currentHour < 17) {
-        return 'A'; // Desde las 7:00 AM hasta las 4:29 PM
+        return 'A';
     } else if (currentHour === 17 && currentMinutes >= 0) {
-        return 'B'; // Desde las 5:30 PM (17:30) en adelante
+        return 'B';
     } else if (currentHour > 17 || (currentHour < 2)) {
-        return 'B'; // Desde las 5:30 PM hasta la 1:30 AM
+        return 'B';
     } else {
-        return 'A'; // Cualquier otro caso (por si acaso)
+        return 'A';
     }
   };
 
   const updateEstado = async (idSolicitud, nuevoEstado) => {
     try {
       await axios.put(`http://172.30.190.47:5000/solicitudes/${idSolicitud}`, { estado: nuevoEstado });
-      // Actualizar el estado localmente
       setDataSolicitudes(prevSolicitudes => 
         prevSolicitudes.map(solicitud => 
           solicitud.idSolicitud === idSolicitud ? { ...solicitud, estado: nuevoEstado } : solicitud
@@ -69,67 +70,82 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch }) {
     }
   };
 
-  // Filtrar solicitudes por fecha de hoy
+  const handleRowClick = (solicitud) => {
+    if (solicitud.estado === 'Pendiente') {
+      setSelectedSolicitud(solicitud);
+      setIsModalOpen(true);
+    } else {
+      toast.warn("Solo se pueden editar solicitudes con estado 'Pendiente'");
+    }
+  };
+
+  const handleUpdateSolicitud = (updatedSolicitud) => {
+    setDataSolicitudes(dataSolicitudes.map(solicitud => 
+      solicitud.idSolicitud === updatedSolicitud.idSolicitud ? updatedSolicitud : solicitud
+    ));
+    toast.success("Solicitud actualizada correctamente!");
+  };
+
   const filteredSolicitudes = dataSolicitudes.filter(solicitud => {
-    // Obtener la fecha de hoy en formato YYYY-MM-DD
     const hoy = new Date();
-    const fechaHoy = hoy.toISOString().split('T')[0]; // Formato YYYY-MM-DD
-
-    // Obtener la fecha de la solicitud en formato YYYY-MM-DD
+    const fechaHoy = hoy.toISOString().split('T')[0];
     const fechaSolicitud = new Date(solicitud.fechaSolicitud).toISOString().split('T')[0];
-
-    return fechaSolicitud === fechaHoy; // Filtrar solo solicitudes de hoy
+    return fechaSolicitud === fechaHoy;
   });
 
-  // Filtrar las solicitudes según el turno actual
   const turnoActual = getTurno();
   const solicitudesFiltradas = filteredSolicitudes.filter(solicitud => solicitud.Turno === turnoActual);
 
   return (
     <div className="solicitudes-container">
+      <ToastContainer containerId="containerA"/>
       <h1>Lista de Solicitudes Hechas</h1>
       {solicitudesFiltradas.length > 0 ? (
         <table className="solicitudes-table">
-        <thead>
-          <tr>
-            <th>ID Solicitud</th>
-            <th>Línea</th>
-            <th>Material</th>
-            <th>Cantidad</th>
-            <th>Estado</th>
-            <th>Fecha Solicitud</th>
-            <th>Recibido</th>
-          </tr>
-        </thead>
-        <tbody>
-          {solicitudesFiltradas.map((solicitud) => (
-            <tr key={solicitud.idSolicitud} style={{ backgroundColor: getBackgroundColor(solicitud.estado) }}>
-              <td>{solicitud.idSolicitud}</td>
-              <td>{solicitud.linea.nombre}</td>
-              <td>{solicitud.material.numero}</td>
-              <td>{solicitud.cantidad} {solicitud.tipoCantidad}</td>
-              <td>{solicitud.estado}</td>
-              <td>{new Date(solicitud.fechaSolicitud).toLocaleString()}</td>
-              <td>
-                <input
-                  type="checkbox"
-                  checked={solicitud.estado === 'Recibido'}
-                  onChange={() => updateEstado(solicitud.idSolicitud, 'Recibido')}
-                />
-              </td>
+          <thead>
+            <tr>
+              <th>ID Solicitud</th>
+              <th>Línea</th>
+              <th>Material</th>
+              <th>Cantidad</th>
+              <th>Estado</th>
+              <th>Fecha Solicitud</th>
+              <th>Recibido</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody className="solLinea-tb">
+            {solicitudesFiltradas.map((solicitud) => (
+              <tr key={solicitud.idSolicitud} style={{ backgroundColor: getBackgroundColor(solicitud.estado) }}>
+                <td onClick={() => handleRowClick(solicitud)}>{solicitud.idSolicitud}</td>
+                <td onClick={() => handleRowClick(solicitud)}>{solicitud.linea.nombre}</td>
+                <td onClick={() => handleRowClick(solicitud)}>{solicitud.material.numero}</td>
+                <td onClick={() => handleRowClick(solicitud)}>{solicitud.cantidad} {solicitud.tipoCantidad}</td>
+                <td onClick={() => handleRowClick(solicitud)}>{solicitud.estado}</td>
+                <td onClick={() => handleRowClick(solicitud)}>{new Date(solicitud.fechaSolicitud).toLocaleString()}</td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={solicitud.estado === 'Recibido'}
+                    onChange={() => updateEstado(solicitud.idSolicitud, 'Recibido')}
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       ) : (
         <p>No hay solicitudes para el turno actual.</p>
       )}
+      <EditSolicitudModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        solicitud={selectedSolicitud} 
+        onUpdate={handleUpdateSolicitud} 
+        fetchDataSolicitudes={fetchDataSolicitudes}
+        Floor={Floor}
+      />
     </div>
   );
 }
 
 export default VerSolLineaComponent;
-
-/*
-
-*/

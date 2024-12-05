@@ -31,14 +31,14 @@ function PedirMaterial() {
   useEffect(() => {
     if (dataLinea) {
       // Extraer los IdentificadoresLinea de dataLinea
-      const identificadores = dataLinea.map(linea => linea.IdentificadorLinea);
+      const identificadores = dataLinea.map(linea => linea.idLinea);
       // Comprobar si IdentLinea está en el array de identificadores
       const isIdentLineaValid = identificadores.includes(parseInt(IdentLinea));
       setIsValid(isIdentLineaValid);
 
       // Si es válido, obtener el nombre correspondiente
       if (isIdentLineaValid) {
-        const lineaEncontrada = dataLinea.find(linea => linea.IdentificadorLinea === parseInt(IdentLinea));
+        const lineaEncontrada = dataLinea.find(linea => linea.idLinea === parseInt(IdentLinea));
         setNombreLinea(lineaEncontrada ? lineaEncontrada.nombre : null);
         setFloorLinea(lineaEncontrada ? lineaEncontrada.Floor : null);
         setIdLinea(lineaEncontrada ? lineaEncontrada.idLinea : null);
@@ -70,6 +70,7 @@ function PedirMaterial() {
                     <VerSolLineaComponent 
                         IdentLinea={IdentLinea}
                         shouldFetch={shouldFetchSolicitudes} 
+                        Floor={floorLinea}
                     />
                 </div>
             </div>
