@@ -119,6 +119,17 @@ function VerSolicitudes() {
   const turnoActual = getTurno();
   const solicitudesTurnoActual = filteredSolicitudes.filter(solicitud => solicitud.Turno === turnoActual);
 
+  const formatDateTimeFromDB = (dateString) => {
+    // Suponiendo que dateString es algo como "2025-01-10 10:46:26.0000000" en la BD
+    const [datePart, timePart] = dateString.split('T'); // Divide en fecha y hora
+    const [year, month, day] = datePart.split('-'); // Divide la fecha en componentes
+    const [hours, minutes, seconds] = timePart.split(':'); // Divide la hora en componentes
+    const [realSeconds] = seconds.split('.'); //Divide los segundos para quitar la parte de los milisegundos
+
+    // Formatea la fecha y hora en el formato deseado
+    return `${year}-${month}-${day} ${hours}:${minutes}:${realSeconds}`;
+  };
+
   return (
     <div className="solicitudes-container">
       <h1>Lista de Solicitudes de Materiales</h1>
@@ -160,7 +171,7 @@ function VerSolicitudes() {
                 <td>{solicitud.material.numero}</td>
                 <td>{solicitud.cantidad} {solicitud.tipoCantidad}</td>
                 <td>{solicitud.estado}</td>
-                <td>{new Date(solicitud.fechaSolicitud).toLocaleString()}</td>
+                <td>{formatDateTimeFromDB(solicitud.fechaSolicitud)}</td>
                 <td>
                   <button 
                     onClick={() => updateEstado(solicitud.idSolicitud, 'Pendiente')}

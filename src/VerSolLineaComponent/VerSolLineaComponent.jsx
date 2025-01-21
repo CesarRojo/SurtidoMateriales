@@ -88,13 +88,31 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch, Floor }) {
 
   const filteredSolicitudes = dataSolicitudes.filter(solicitud => {
     const hoy = new Date();
-    const fechaHoy = hoy.toISOString().split('T')[0];
+    const dia = String(hoy.getDate()).padStart(2, '0'); // Asegura que el día tenga dos dígitos
+    const mes = String(hoy.getMonth() + 1).padStart(2, '0'); // Los meses son 0-indexados, así que sumamos 1
+    const año = hoy.getFullYear();
+    const fechaHoy = `${año}-${mes}-${dia}`; // Formato "YYYY-MM-DD"
+    
+    // Convierte la fecha de la solicitud a formato ISO y extrae solo la parte de la fecha
     const fechaSolicitud = new Date(solicitud.fechaSolicitud).toISOString().split('T')[0];
-    return fechaSolicitud === fechaHoy;
-  });
+
+    // Compara las fechas de todos los registros de la tabla solicitudes, si NO coinciden las fechas ese registro NO se guarda en filteredSolicitudes
+    return fechaSolicitud === fechaHoy; 
+});
 
   const turnoActual = getTurno();
   const solicitudesFiltradas = filteredSolicitudes.filter(solicitud => solicitud.Turno === turnoActual);
+
+  const formatDateTimeFromDB = (dateString) => {
+    // Suponiendo que dateString es algo como "2025-01-10 10:46:26.0000000" en la BD
+    const [datePart, timePart] = dateString.split('T'); // Divide en fecha y hora
+    const [year, month, day] = datePart.split('-'); // Divide la fecha en componentes
+    const [hours, minutes, seconds] = timePart.split(':'); // Divide la hora en componentes
+    const [realSeconds] = seconds.split('.'); //Divide los segundos para quitar la parte de los milisegundos
+
+    // Formatea la fecha y hora en el formato deseado
+    return `${year}-${month}-${day} ${hours}:${minutes}:${realSeconds}`;
+  };
 
   return (
     <div className="solicitudes-container">
@@ -121,7 +139,7 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch, Floor }) {
                 <td onClick={() => handleRowClick(solicitud)}>{solicitud.material.numero}</td>
                 <td onClick={() => handleRowClick(solicitud)}>{solicitud.cantidad} {solicitud.tipoCantidad}</td>
                 <td onClick={() => handleRowClick(solicitud)}>{solicitud.estado}</td>
-                <td onClick={() => handleRowClick(solicitud)}>{new Date(solicitud.fechaSolicitud).toLocaleString()}</td>
+                <td onClick={() => handleRowClick(solicitud)}>{formatDateTimeFromDB(solicitud.fechaSolicitud)}</td>
                 <td>
                   <input
                     type="checkbox"

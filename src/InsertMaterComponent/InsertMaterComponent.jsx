@@ -76,6 +76,17 @@ function InsertMaterComponent() {
 
     const handleInsert = async (e) => {
         e.preventDefault();
+        
+        // Verificar si el material ya existe
+        const materialExists = dataMater.some(material => 
+            material.numero === numero && material.floor === selectedFloor
+        );
+    
+        if (materialExists) {
+            toast.error("El material ya existe en este FLOOR.");
+            return; // Salir de la función si el material ya existe
+        }
+    
         try {
             const newMaterial = { 
                 numero, 

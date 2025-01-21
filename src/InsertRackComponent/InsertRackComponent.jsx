@@ -14,22 +14,29 @@ function InsertRackComponent() {
     const fetchRacks = async () => {
         try {
             const response = await axios.get(`http://172.30.190.47:5000/rack`);
-            console.log(response.data);
             setDataRack(response.data);
         } catch (error) {
             console.error("Error fetching racks");
         }
     }
 
-    const handleAddRack = async(e) => {
+    const handleAddRack = async (e) => {
         e.preventDefault();
-
+    
+        // Verificar si el rack ya existe
+        const rackExists = dataRack.some(rack => rack.nombre.toLowerCase() === nombre.toLowerCase());
+    
+        if (rackExists) {
+            toast.error("El rack ya existe.");
+            return; // Salir de la función si el rack ya existe
+        }
+    
         try {
             const newRack = { nombre };
             await axios.post(`http://172.30.190.47:5000/rack`, newRack);
             fetchRacks();
             setNombre('');
-
+    
             toast.success("Rack insertado correctamente!");
         } catch (error) {
             console.error("Error inserting rack");
@@ -72,7 +79,7 @@ function InsertRackComponent() {
                 <button type="submit">Agregar rack</button>
             </form>
             <table className="material-table">
-                <thead class Name="material-tablehd">
+                <thead className="material-tablehd">
                     <tr>
                         <th>ID Rack</th>
                         <th>Nombre Rack</th>

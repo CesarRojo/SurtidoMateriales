@@ -52,6 +52,17 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit, Floor }) {
         }
     };
 
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses de 0-11
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+    
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
+    };
+
     const handleSubmit = async (event) => {
         event.preventDefault();
 
@@ -63,11 +74,13 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit, Floor }) {
 
         setErrorMessage(""); // Limpiar mensaje de error si todos los campos son válidos
         
-        const currentDate = new Date().toISOString(); // Obtiene la fecha actual en formato ISO
+        
+        const currentDate = new Date(); // Obtiene la fecha actual en formato ISO
+        const formattedDate = formatDate(currentDate);
         const newRequest = {
             cantidad: parseInt(quantity),
             estado: "Pendiente",
-            fechaSolicitud: currentDate,
+            fechaSolicitud: formattedDate,
             idMaterial: parseInt(selectedMaterial.value),
             tipoCantidad: selectedType,
             idLinea: IdLinea,
@@ -76,7 +89,7 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit, Floor }) {
 
         try {
             const response = await axios.post(`http://172.30.190.47:5000/solicitudes/`, newRequest);
-            console.log("Solicitud enviada con éxito:", response.data);
+            console.log("Solicitud enviada con éxito:", response.data, newRequest);
             toast.success ("Solicitud enviada con éxito!");
             // Limpiar el formulario
             setSelectedMaterial(null);
