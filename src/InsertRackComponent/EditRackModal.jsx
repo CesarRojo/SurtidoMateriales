@@ -12,11 +12,14 @@ const EditRackModal = ({ isOpen, onClose, rack, onUpdate, onDelete, fetchRacks }
     }, [rack]);
 
     const handleUpdate = async () => {
-        const updatedRack = { nombre };
-        await axios.put(`http://172.30.190.47:5000/rack/${rack.idRack}`, updatedRack);
-        onUpdate({ ...rack, nombre });
-        fetchRacks();
-        onClose();
+        const confirmUpdate = window.confirm("¿Estás seguro de que deseas actualizar este rack?");
+        if (confirmUpdate) {
+            const updatedRack = { nombre };
+            await axios.put(`http://172.30.190.47:5000/rack/${rack.idRack}`, updatedRack);
+            onUpdate({ ...rack, nombre });
+            fetchRacks();
+            onClose();
+        }
     };
 
     const handleDelete = async () => {

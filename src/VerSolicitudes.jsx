@@ -47,7 +47,7 @@ function VerSolicitudes() {
     XLSX.utils.book_append_sheet(wb, ws, 'Solicitudes');
 
     // Exportar el libro
-    XLSX.writeFile(wb, 'Solicitudes.xlsx');
+    XLSX.writeFile(wb, `Solicitudes-${fechaFiltro}.xlsx`);
   };
 
   // Función para determinar el color de fondo según el estado de la solicitud
