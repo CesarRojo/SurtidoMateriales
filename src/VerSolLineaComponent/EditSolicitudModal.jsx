@@ -40,24 +40,21 @@ const EditSolicitudModal = ({ isOpen, onClose, solicitud, onUpdate, fetchDataSol
     }, [solicitud, Floor]);
 
     const handleUpdate = async () => {
-        const confirmUpdate = window.confirm("¿Estás seguro de que deseas actualizar esta solicitud?");
-        if (confirmUpdate) {
-            const updatedSolicitud = {
-                cantidad: parseInt(cantidad),
-                tipoCantidad,
-                idMaterial: selectedMaterial.value // Usar el ID del material seleccionado
-            };
-        
-            try {
-                // Actualiza la solicitud
-                await axios.put(`http://172.30.190.47:5000/solicitudes/${solicitud.idSolicitud}`, updatedSolicitud);
-                // Actualiza el estado en el front-end
-                onUpdate({ ...solicitud, ...updatedSolicitud });
-                fetchDataSolicitudes();
-                onClose();
-            } catch (error) {
-                console.error("Error updating solicitud:", error.response ? error.response.data : error.message);
-            }
+        const updatedSolicitud = {
+            cantidad: parseInt(cantidad),
+            tipoCantidad,
+            idMaterial: selectedMaterial.value // Usar el ID del material seleccionado
+        };
+    
+        try {
+            // Actualiza la solicitud
+            await axios.put(`http://172.30.190.47:5000/solicitudes/${solicitud.idSolicitud}`, updatedSolicitud);
+            // Actualiza el estado en el front-end
+            onUpdate({ ...solicitud, ...updatedSolicitud });
+            fetchDataSolicitudes();
+            onClose();
+        } catch (error) {
+            console.error("Error updating solicitud:", error.response ? error.response.data : error.message);
         }
     };
 
@@ -74,6 +71,7 @@ const EditSolicitudModal = ({ isOpen, onClose, solicitud, onUpdate, fetchDataSol
                         placeholder="Cantidad"
                         value={cantidad}
                         onChange={(e) => setCantidad(e.target.value)}
+                        min="1"
                         required
                     />
                 </label>

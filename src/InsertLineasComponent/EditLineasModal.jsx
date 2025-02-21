@@ -14,14 +14,11 @@ const EditLineasModal = ({ isOpen, onClose, line, onUpdate, onDelete, fetchLines
     }, [line]);
 
     const handleUpdate = async () => {
-        const confirmUpdate = window.confirm("¿Estás seguro de que deseas actualizar esta línea?");
-        if (confirmUpdate) {
-            const updatedLine = { nombre, Floor: floor };
-            await axios.put(`http://172.30.190.47:5000/lines/${line.idLinea}`, updatedLine);
-            onUpdate(updatedLine);
-            fetchLines();
-            onClose();
-        }
+        const updatedLine = { nombre, Floor: floor };
+        await axios.put(`http://172.30.190.47:5000/lines/${line.idLinea}`, updatedLine);
+        onUpdate(updatedLine);
+        fetchLines();
+        onClose();
     };
 
     const handleDelete = async () => {

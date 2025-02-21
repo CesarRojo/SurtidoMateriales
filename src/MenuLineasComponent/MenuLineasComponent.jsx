@@ -13,7 +13,12 @@ function MenuLineasComponent() {
       try {
         const lineasResponse = await axios.get(`http://172.30.190.47:5000/lines/`);
         setLineas(lineasResponse.data);
-        const solicitudesResponse = await axios.get(`http://172.30.190.47:5000/solicitudes/`);
+        const fechaHoy = new Date().toISOString().split('T')[0];
+        const solicitudesResponse = await axios.get(`http://172.30.190.47:5000/solicitudes/fecha`, {
+          params: {
+            fecha: fechaHoy
+          }
+        });
         setSolicitudes(solicitudesResponse.data);
       } catch (error) {
         console.log("<<Error fetching data>>", error);
@@ -28,15 +33,15 @@ function MenuLineasComponent() {
     const currentMinutes = new Date().getMinutes();
 
     if (currentHour === 16 && currentMinutes >= 0 && currentMinutes < 30) {
-      return 'A';
-    } else if (currentHour >= 7 && currentHour < 17) {
-      return 'A';
-    } else if (currentHour === 17 && currentMinutes >= 0) {
-      return 'B';
-    } else if (currentHour > 17 || (currentHour < 2)) {
-      return 'B';
+      return 'A'; // Incluye hasta las 16:29
+    } else if (currentHour >= 7 && currentHour < 16) {
+      return 'A'; // Desde las 7:00 AM hasta las 3:59 PM
+    } else if (currentHour === 16 && currentMinutes >= 31) {
+      return 'B'; // Desde las 4:31 PM (16:31) en adelante
+    } else if (currentHour >= 17 || (currentHour < 2)) {
+      return 'B'; // Desde las 5:00 PM hasta la 1:30 AM
     } else {
-      return 'A';
+      return 'A'; // Cualquier otro caso (por si acaso)
     }
   };
 
@@ -62,6 +67,7 @@ function MenuLineasComponent() {
 
   return (
     <div className="lineas-container">
+      <h1>PLANTA 4</h1>
       <h1>Solicitudes por Línea</h1>
       <div className="lineas-cards">
         {lineas.map((linea) => {

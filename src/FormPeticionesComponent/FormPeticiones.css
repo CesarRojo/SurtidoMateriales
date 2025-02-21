@@ -62,7 +62,7 @@ button:hover {
 }
 
 .recargaBtn {
-    margin: 15px 12.5%;
+    margin: 15px 7.5%;
     width: 80%;
 }
 
@@ -71,4 +71,15 @@ button:hover {
     margin: 120% auto; /* Centra la imagen y agrega espacio superior e inferior */
     max-width: 100%; /* Asegura que la imagen no exceda el ancho del contenedor */
     height: auto; /* Mantiene la relación de aspecto */
+}
+
+.openModalBtnFormPet {
+    margin: 15px 7.5%;
+    width: 80%;
+}
+
+.enviarFormPet {
+    margin: 15px 7.5%;
+    width: 80%;
+    background-color: #4CAF50;
 }

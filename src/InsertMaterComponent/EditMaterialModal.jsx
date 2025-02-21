@@ -35,19 +35,16 @@ const EditMaterialModal = ({ isOpen, onClose, material, onUpdate, onDelete, fetc
     }, [material]);
 
     const handleUpdate = async () => {
-        const confirmUpdate = window.confirm("¿Estás seguro de que deseas actualizar este material?");
-        if (confirmUpdate) {
-            const updatedMaterial = { 
-                numero, 
-                nombre, 
-                floor: selectedFloor, 
-                idRack: selectedRackId ? parseInt(selectedRackId) : null,
-            };
-            await axios.put(`http://172.30.190.47:5000/material/${material.idMaterial}`, updatedMaterial);
-            onUpdate(updatedMaterial);
-            fetchData();
-            onClose();
-        }
+        const updatedMaterial = { 
+            numero, 
+            nombre, 
+            floor: selectedFloor, 
+            idRack: selectedRackId ? parseInt(selectedRackId) : null,
+        };
+        await axios.put(`http://172.30.190.47:5000/material/${material.idMaterial}`, updatedMaterial);
+        onUpdate(updatedMaterial);
+        fetchData();
+        onClose();
     };
 
     const handleDelete = async () => {

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Select from 'react-select';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import ModalTablet from "../ModalTablet/ModalTablet";
 import './FormPeticiones.css'
 
 function FormPeticionesComponent({ IdLinea, onFormSubmit, Floor }) {
@@ -11,6 +12,7 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit, Floor }) {
     const [selectedType, setSelectedType] = useState("");
     const [quantity, setQuantity] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     useEffect(() => {
 
@@ -18,7 +20,7 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit, Floor }) {
             try {
                 const response = await axios.get(`http://172.30.190.47:5000/material/floor`, {
                     params: {
-                        floor: Floor, //Esto para que aparezcan los materiales correspondientes de cada FLOOR
+                        floor: Floor, //Esto para que aparezcan los materiales correspondientes de cada FLOOR 
                     }
                 });
                 const formattedMaterials = response.data.map(material => ({
@@ -37,20 +39,19 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit, Floor }) {
     const getTurno = () => {
         const currentHour = new Date().getHours();
         const currentMinutes = new Date().getMinutes();
-        
-        // Si la hora es entre 7:00 AM (7) y 4:30 PM (16:30)
+    
         if (currentHour === 16 && currentMinutes >= 0 && currentMinutes < 30) {
-            return 'A'; // Incluye hasta las 16:29
-        } else if (currentHour >= 7 && currentHour < 17) {
-            return 'A'; // Desde las 7:00 AM hasta las 4:29 PM
-        } else if (currentHour === 17 && currentMinutes >= 30) {
-            return 'B'; // Desde las 5:30 PM (17:30) en adelante
-        } else if (currentHour > 17 || (currentHour < 2)) {
-            return 'B'; // Desde las 5:30 PM hasta la 1:30 AM
+          return 'A'; // Incluye hasta las 16:29
+        } else if (currentHour >= 7 && currentHour < 16) {
+          return 'A'; // Desde las 7:00 AM hasta las 3:59 PM
+        } else if (currentHour === 16 && currentMinutes >= 31) {
+          return 'B'; // Desde las 4:31 PM (16:31) en adelante
+        } else if (currentHour >= 17 || (currentHour < 2)) {
+          return 'B'; // Desde las 5:00 PM hasta la 1:30 AM
         } else {
-            return 'A'; // Cualquier otro caso (por si acaso)
+          return 'A'; // Cualquier otro caso (por si acaso)
         }
-    };
+      };
 
     const formatDate = (date) => {
         const year = date.getFullYear();
@@ -105,9 +106,21 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit, Floor }) {
         }
     };
 
+    const handleOpenModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleMaterialSelect = (material) => {
+        const selected = dataMaterial.find(item => item.value === material);
+        setSelectedMaterial(selected);
+    };
+
     return (
         <>
-            <ToastContainer />
             <form onSubmit={handleSubmit}>
                 <div>
                     <label htmlFor="material">Material:</label>
@@ -152,10 +165,19 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit, Floor }) {
 
                 {/* {errorMessage && <p className="error-message">{errorMessage}</p>} Mostrar mensaje de error */}
 
-                <button type="submit">Enviar</button>
+                <button type="submit" className="enviarFormPet">Enviar</button>
             </form>
             <button className="recargaBtn" onClick={onFormSubmit}>Actualizar</button>
+            <button className="openModalBtnFormPet" onClick={handleOpenModal}>Escaner</button>
             <img src="logo.png" alt="logoATR" className="logoATR"/>
+            <ModalTablet 
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                onMaterialSelect={handleMaterialSelect}
+                IdLinea={IdLinea}
+                Floor={Floor}
+                onFormSubmit={onFormSubmit}
+            />
         </>
     );
 }

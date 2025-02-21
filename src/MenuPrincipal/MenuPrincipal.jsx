@@ -28,6 +28,7 @@ function MenuLineasPrincipal() {
 
   return (
     <div className="lineas-container">
+      <h1>PLANTA 4</h1>
       <h1>Seleccione su Línea</h1>
       <div className="lineas-cards">
         {lineas.map((linea) => {

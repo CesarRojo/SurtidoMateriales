@@ -6,6 +6,7 @@ import CodigosBarra from "../CodigosBarraComponent/CodigosBarra";
 import InsertMaterComponent from "../InsertMaterComponent/InsertMaterComponent";
 import InsertLineasComponent from "../InsertLineasComponent/InsertLineasComponent";
 import InsertRackComponent from "../InsertRackComponent/InsertRackComponent";
+import CodigosQR from "../CodigoQRComponent/CodigosQR";
 
 function PanelAdministracion() {
   const [componenteActivo, setComponenteActivo] = useState(null);
@@ -25,6 +26,8 @@ function PanelAdministracion() {
         return <InsertLineasComponent />;
       case 'insertar-racks':
         return <InsertRackComponent />;
+      case 'codigos-qr':
+        return <CodigosQR />;
       default:
         return null; // No renderiza nada si no hay componente activo
     }
@@ -43,6 +46,12 @@ function PanelAdministracion() {
             onClick={() => handleCardClick('codigos-barra')}
           >
             <h2>Códigos de Barra</h2>
+          </div>
+          <div 
+            className="panel-card" 
+            onClick={() => handleCardClick('codigos-qr')}
+          >
+            <h2>Codigos QR</h2>
           </div>
           <div 
             className="panel-card" 

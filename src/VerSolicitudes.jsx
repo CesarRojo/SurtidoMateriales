@@ -47,7 +47,7 @@ function VerSolicitudes() {
     XLSX.utils.book_append_sheet(wb, ws, 'Solicitudes');
 
     // Exportar el libro
-    XLSX.writeFile(wb, `Solicitudes-${fechaFiltro}.xlsx`);
+    XLSX.writeFile(wb, 'Solicitudes.xlsx');
   };
 
   // Función para determinar el color de fondo según el estado de la solicitud
@@ -86,12 +86,12 @@ function VerSolicitudes() {
 
     if (currentHour === 16 && currentMinutes >= 0 && currentMinutes < 30) {
       return 'A'; // Incluye hasta las 16:29
-    } else if (currentHour >= 7 && currentHour < 17) {
-      return 'A'; // Desde las 7:00 AM hasta las 4:29 PM
-    } else if (currentHour === 17 && currentMinutes >= 0) {
-      return 'B'; // Desde las 5:00 PM (17:00) en adelante
-    } else if (currentHour > 17 || (currentHour < 2)) {
-      return 'B'; // Desde las 5:30 PM hasta la 1:30 AM
+    } else if (currentHour >= 7 && currentHour < 16) {
+      return 'A'; // Desde las 7:00 AM hasta las 3:59 PM
+    } else if (currentHour === 16 && currentMinutes >= 31) {
+      return 'B'; // Desde las 4:31 PM (16:31) en adelante
+    } else if (currentHour >= 17 || (currentHour < 2)) {
+      return 'B'; // Desde las 5:00 PM hasta la 1:30 AM
     } else {
       return 'A'; // Cualquier otro caso (por si acaso)
     }

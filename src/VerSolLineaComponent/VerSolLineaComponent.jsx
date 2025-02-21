@@ -45,15 +45,15 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch, Floor }) {
     const currentMinutes = new Date().getMinutes();
 
     if (currentHour === 16 && currentMinutes >= 0 && currentMinutes < 30) {
-        return 'A';
-    } else if (currentHour >= 7 && currentHour < 17) {
-        return 'A';
-    } else if (currentHour === 17 && currentMinutes >= 0) {
-        return 'B';
-    } else if (currentHour > 17 || (currentHour < 2)) {
-        return 'B';
+      return 'A'; // Incluye hasta las 16:29
+    } else if (currentHour >= 7 && currentHour < 16) {
+      return 'A'; // Desde las 7:00 AM hasta las 3:59 PM
+    } else if (currentHour === 16 && currentMinutes >= 31) {
+      return 'B'; // Desde las 4:31 PM (16:31) en adelante
+    } else if (currentHour >= 17 || (currentHour < 2)) {
+      return 'B'; // Desde las 5:00 PM hasta la 1:30 AM
     } else {
-        return 'A';
+      return 'A'; // Cualquier otro caso (por si acaso)
     }
   };
 

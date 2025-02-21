@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import ErrorComponent from "./errorComponent/errorComponent";
 import FormPeticionesComponent from "./FormPeticionesComponent/FormPeticionesComponent";
 import VerSolLineaComponent from "./VerSolLineaComponent/VerSolLineaComponent";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './PedirMaterial.css'
 
 function PedirMaterial() {
@@ -55,6 +57,7 @@ function PedirMaterial() {
 
   return (
       <>
+      <ToastContainer />
         {isValid ? (
           <>
             <div className="content">
