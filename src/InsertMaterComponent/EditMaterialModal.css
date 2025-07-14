@@ -53,3 +53,144 @@ button:hover {
 .btnDel:hover {
     background-color: firebrick;
 }
+
+/* Estilos para la sección de carga de Excel */
+/* .excel-upload-section {
+    border-radius: 10px;
+    padding: 24px 20px 16px 20px;
+    max-width: 600px;
+} */
+
+/* .excel-upload-section h2 {
+    margin-top: 0;
+    font-size: 1.25rem;
+    color: #2d3748;
+} */
+
+.excel-upload-controls {
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+.excel-upload-label {
+    background: #3182ce;
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s;
+    border: none;
+    display: inline-block;
+}
+
+.excel-upload-label:hover {
+    background: #225ea8;
+}
+
+.excel-upload-filename {
+    font-size: 0.95rem;
+    color: #4a5568;
+    font-style: italic;
+    max-width: 220px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.excel-upload-btn {
+    background: #38a169;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 18px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.excel-upload-btn:hover {
+    background: #276749;
+}
+
+.excel-upload-hint {
+    font-size: 0.95rem;
+    color: #718096;
+    margin-top: 4px;
+}
+
+/* Modal personalizado para errores de Excel */
+.custom-modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+}
+
+.custom-modal-content {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    width: 95%;
+    max-width: 480px;
+    padding: 0;
+    overflow: hidden;
+    animation: modalIn 0.2s;
+}
+
+@keyframes modalIn {
+    from { transform: translateY(-40px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.custom-modal-header {
+    background: #e53e3e;
+    color: #fff;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.custom-modal-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.custom-modal-close {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.custom-modal-body {
+    padding: 20px 24px 8px 24px;
+    color: #2d3748;
+}
+
+.custom-modal-message {
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.custom-modal-error-list {
+    max-height: 180px;
+    overflow-y: auto;
+    padding-left: 18px;
+    color: #c53030;
+    font-size: 0.98rem;
+}
+
+.custom-modal-footer {
+    padding: 12px 24px 18px 24px;
+    text-align: right;
+    background: #f7fafc;
+}
+

@@ -18,6 +18,11 @@ function InsertMaterComponent() {
     const [selectedMaterial, setSelectedMaterial] = useState(null); // Para el select de material
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [filteredMaterials, setFilteredMaterials] = useState([]); // State for filtered materials
+    const [file, setFile] = useState(null);
+    const [message, setMessage] = useState("");
+    const [excelErrorModalOpen, setExcelErrorModalOpen] = useState(false);
+    const [excelErrorMsg, setExcelErrorMsg] = useState("");
+    const [excelErrorList, setExcelErrorList] = useState([]);
 
     const fetchData = async () => {
         try {
@@ -136,54 +141,111 @@ function InsertMaterComponent() {
 
     const filteredMaterialsToDisplay = filterFloor ? filteredMaterials.filter(material => material.floor === filterFloor) : filteredMaterials;
 
+    //Excel
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]);
+    }
+
+    const handleUpload = async () => {
+        if (!file) {
+            alert("Selecciona un archivo primero");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        try {
+            const res = await axios.post(`http://172.30.190.47:5000/material/bulk-update`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            alert(res.data.message || "Actualizacion exitosa");
+        } catch (error) {
+            console.error(error);
+            setExcelErrorMsg(error.response?.data?.message || "Error al subir archivo");
+            setExcelErrorList(error.response?.data?.errores || []);
+            setExcelErrorModalOpen(true);
+        }
+    }
+    //Fin excel
+
     return (
         <div className="mat-container">
-            <h2>Insertar Nuevo Material</h2>
             <div className="form-filters-container">
-                <form onSubmit={handleInsert} className="insert-form">
-                    <input
-                        type="text"
-                        placeholder="Número"
-                        value={numero}
-                        onChange={(e) => setNumero(e.target.value)}
-                        required
-                    />
-                    <input
-                        type="text"
-                        placeholder="Nombre"
-                        value={nombre}
-                        onChange={(e) => setNombre(e.target.value)}
-                        required
-                    />
-                    <select
-                        id="lineas"
-                        value={selectedFloor ? dataLines.find(linea => linea.Floor === selectedFloor)?.idLinea : ""}
-                        onChange={handleLineaChange}
-                        required
-                    >
-                        <option value="">Seleccione un FLOOR</option>
-                        {dataLines.map((linea) => (
-                            <option key={linea.idLinea} value={linea.idLinea}>
-                                {linea.Floor}
-                            </option>
-                        ))}
-                    </select>
+                <div>
+                    <h2>Insertar Nuevo Material</h2>
+                    <form onSubmit={handleInsert} className="insert-form">
+                        <input
+                            type="text"
+                            placeholder="Número"
+                            value={numero}
+                            onChange={(e) => setNumero(e.target.value)}
+                            required
+                        />
+                        <input
+                            type="text"
+                            placeholder="Nombre"
+                            value={nombre}
+                            onChange={(e) => setNombre(e.target.value)}
+                            required
+                        />
+                        <select
+                            id="lineas"
+                            value={selectedFloor ? dataLines.find(linea => linea.Floor === selectedFloor)?.idLinea : ""}
+                            onChange={handleLineaChange}
+                            required
+                        >
+                            <option value="">Seleccione un FLOOR</option>
+                            {dataLines.map((linea) => (
+                                <option key={linea.idLinea} value={linea.idLinea}>
+                                    {linea.Floor}
+                                </option>
+                            ))}
+                        </select>
 
-                    <select
-                        id="racks"
-                        value={selectedRackId}
-                        onChange={(e) => setSelectedRackId(e.target.value)}
-                    >
-                        <option value="">Seleccione un RACK</option>
-                        {dataRacks.map((rack) => (
-                            <option key={rack.idRack} value={rack.idRack}>
-                                {rack.nombre}
-                            </option>
-                        ))}
-                    </select>
+                        <select
+                            id="racks"
+                            value={selectedRackId}
+                            onChange={(e) => setSelectedRackId(e.target.value)}
+                        >
+                            <option value="">Seleccione un RACK</option>
+                            {dataRacks.map((rack) => (
+                                <option key={rack.idRack} value={rack.idRack}>
+                                    {rack.nombre}
+                                </option>
+                            ))}
+                        </select>
 
-                    <button type="submit">Agregar Material</button>
-                </form>
+                        <button type="submit" className="addMatBtn">Agregar Material</button>
+                    </form>
+                </div>
+
+                <div className="excel-upload-section">
+                    <h2>Actualizar Rack de Materiales por Excel</h2>
+                    <div className="excel-upload-controls">
+                        <input
+                            type="file"
+                            accept=".csv, .xlsx"
+                            id="excel-upload-input"
+                            onChange={handleFileChange}
+                            style={{ display: 'none' }}
+                        />
+                        <label htmlFor="excel-upload-input" className="excel-upload-label">
+                            Seleccionar archivo
+                        </label>
+                        <span className="excel-upload-filename">
+                            {file ? file.name : "Ningún archivo seleccionado"}
+                        </span>
+                        <button className="excel-upload-btn" onClick={handleUpload}>
+                            Subir y Actualizar
+                        </button>
+                    </div>
+                    <p className="excel-upload-hint">
+                        El archivo debe tener las columnas <b>nombre</b> y <b>nombreRack</b>.
+                    </p>
+                </div>
 
                 <div className="filtros">
                  <h2>Filtros busqueda</h2>
@@ -211,6 +273,35 @@ function InsertMaterComponent() {
                   </div>
                 </div>
             </div>
+
+            
+
+            {/* Modal de errores de Excel */}
+            {excelErrorModalOpen && (
+                <div className="custom-modal-overlay">
+                    <div className="custom-modal-content">
+                        <div className="custom-modal-header">
+                            <span className="custom-modal-title">Errores al procesar el archivo</span>
+                            <button className="custom-modal-close" onClick={() => setExcelErrorModalOpen(false)}>&times;</button>
+                        </div>
+                        <div className="custom-modal-body">
+                            <p className="custom-modal-message">{excelErrorMsg}</p>
+                            {excelErrorList.length > 0 && (
+                                <ul className="custom-modal-error-list">
+                                    {excelErrorList.map((err, idx) => (
+                                        <li key={idx}>{err}</li>
+                                    ))}
+                                </ul>
+                            )}
+                        </div>
+                        <div className="custom-modal-footer">
+                            <button className="excel-upload-btn" onClick={() => setExcelErrorModalOpen(false)}>
+                                Cerrar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <table className="material-table">
                 <thead className="material-tablehd">

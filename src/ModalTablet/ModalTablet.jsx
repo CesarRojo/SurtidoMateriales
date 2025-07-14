@@ -120,11 +120,11 @@ function ModalTablet({ isOpen, onClose, onMaterialSelect, IdLinea, Floor, onForm
         const newRequest = {
             cantidad: parseInt(quantity),
             estado: "Pendiente",
-            fechaSolicitud: formattedDate,
+            // fechaSolicitud: formattedDate,
             idMaterial: materialId,
             tipoCantidad: selectedType,
             idLinea: IdLinea,
-            Turno: getTurno()
+            // Turno: getTurno()
         };
 
         try {

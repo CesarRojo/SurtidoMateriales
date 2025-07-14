@@ -36,33 +36,33 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit, Floor }) {
         fetchDataMaterial();
     }, []);
 
-    const getTurno = () => {
-        const currentHour = new Date().getHours();
-        const currentMinutes = new Date().getMinutes();
+    // const getTurno = () => {
+    //     const currentHour = new Date().getHours();
+    //     const currentMinutes = new Date().getMinutes();
     
-        if (currentHour === 16 && currentMinutes >= 0 && currentMinutes < 30) {
-          return 'A'; // Incluye hasta las 16:29
-        } else if (currentHour >= 7 && currentHour < 16) {
-          return 'A'; // Desde las 7:00 AM hasta las 3:59 PM
-        } else if (currentHour === 16 && currentMinutes >= 31) {
-          return 'B'; // Desde las 4:31 PM (16:31) en adelante
-        } else if (currentHour >= 17 || (currentHour < 2)) {
-          return 'B'; // Desde las 5:00 PM hasta la 1:30 AM
-        } else {
-          return 'A'; // Cualquier otro caso (por si acaso)
-        }
-      };
+    //     if (currentHour === 16 && currentMinutes >= 0 && currentMinutes < 30) {
+    //       return 'A'; // Incluye hasta las 16:29
+    //     } else if (currentHour >= 7 && currentHour < 16) {
+    //       return 'A'; // Desde las 7:00 AM hasta las 3:59 PM
+    //     } else if (currentHour === 16 && currentMinutes >= 31) {
+    //       return 'B'; // Desde las 4:31 PM (16:31) en adelante
+    //     } else if (currentHour >= 17 || (currentHour < 2)) {
+    //       return 'B'; // Desde las 5:00 PM hasta la 1:30 AM
+    //     } else {
+    //       return 'A'; // Cualquier otro caso (por si acaso)
+    //     }
+    //   };
 
-    const formatDate = (date) => {
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses de 0-11
-        const day = String(date.getDate()).padStart(2, '0');
-        const hours = String(date.getHours()).padStart(2, '0');
-        const minutes = String(date.getMinutes()).padStart(2, '0');
-        const seconds = String(date.getSeconds()).padStart(2, '0');
+    // const formatDate = (date) => {
+    //     const year = date.getFullYear();
+    //     const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses de 0-11
+    //     const day = String(date.getDate()).padStart(2, '0');
+    //     const hours = String(date.getHours()).padStart(2, '0');
+    //     const minutes = String(date.getMinutes()).padStart(2, '0');
+    //     const seconds = String(date.getSeconds()).padStart(2, '0');
     
-        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
-    };
+    //     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
+    // };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -76,21 +76,20 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit, Floor }) {
         setErrorMessage(""); // Limpiar mensaje de error si todos los campos son válidos
         
         
-        const currentDate = new Date(); // Obtiene la fecha actual en formato ISO
-        const formattedDate = formatDate(currentDate);
+        // const currentDate = new Date(); // Obtiene la fecha actual en formato ISO
+        // const formattedDate = formatDate(currentDate);
         const newRequest = {
             cantidad: parseInt(quantity),
             estado: "Pendiente",
-            fechaSolicitud: formattedDate,
+            // fechaSolicitud: formattedDate,
             idMaterial: parseInt(selectedMaterial.value),
             tipoCantidad: selectedType,
             idLinea: IdLinea,
-            Turno: getTurno() // Agregar el campo "turno"
+            // Turno: getTurno() // Agregar el campo "turno"
         };
 
         try {
             const response = await axios.post(`http://172.30.190.47:5000/solicitudes/`, newRequest);
-            console.log("Solicitud enviada con éxito:", response.data, newRequest);
             toast.success ("Solicitud enviada con éxito!");
             // Limpiar el formulario
             setSelectedMaterial(null);

@@ -22,10 +22,6 @@
     background-color: #f1f1f1;
 }
 
-.insert-form {
-    margin-bottom: 20px;
-}
-
 .insert-form input {
     margin-right: 10px;
     padding: 8px;
@@ -47,7 +43,8 @@
 }
 
 .form-filters-container {
-    display: flex;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
     justify-content: space-between;
     align-items: center;
 }
@@ -57,12 +54,12 @@
     gap: 10px; /* Espacio entre los elementos del formulario */
 }
 
-.filtros {
-    margin-left: 20px; /* Espacio entre el formulario y el filtro */
-}
+/* .filtros {
+    margin-left: 20px;
+} */
 
 .filtros-2 {
-    margin-left: 20px; /* Espacio entre el formulario y el filtro */
+    /* margin-left: 20px; */
     display: flex;
 }
 
@@ -75,6 +72,11 @@
 }
 
 #material-select {
-    width: 300px;
+    width: auto;
     margin-right: 10px;
+}
+
+.addMatBtn {
+    width: 50%;
+    height: 41px;
 }
