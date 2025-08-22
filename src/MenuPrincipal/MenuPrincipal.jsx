@@ -11,10 +11,10 @@ function MenuLineasPrincipal() {
     const fetchData = async () => {
       try {
         // Obtener líneas
-        const lineasResponse = await axios.get(`http://172.30.190.47:5000/lines/`);
+        const lineasResponse = await axios.get(`http://172.30.189.112:5000/lines/`);
         setLineas(lineasResponse.data);
       } catch (error) {
-        console.log("<<Error fetching data>>", error);
+        console.error("<<Error fetching data>>", error);
       }
     };
 
@@ -28,7 +28,6 @@ function MenuLineasPrincipal() {
 
   return (
     <div className="lineas-container">
-      <h1>PLANTA 3</h1>
       <h1>Seleccione su Línea</h1>
       <div className="lineas-cards">
         {lineas.map((linea) => {

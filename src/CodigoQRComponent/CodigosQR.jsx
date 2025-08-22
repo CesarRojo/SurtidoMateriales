@@ -57,7 +57,7 @@ const CodigosQR = () => {
   useEffect(() => {
     const fetchLineas = async () => {
       try {
-        const response = await axios.get('http://172.30.190.47:5000/lines');
+        const response = await axios.get('http://172.30.189.112:5000/lines');
         const uniqueLineas = [];
         const seenFloors = new Set(); // Usar un Set para rastrear los Floors que ya fueron vistos
   
@@ -82,7 +82,7 @@ const CodigosQR = () => {
     const fetchMateriales = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://172.30.190.47:5000/material/floor', {
+        const response = await axios.get('http://172.30.189.112:5000/material/floor', {
           params: {
             floor: selectedLinea,
           }

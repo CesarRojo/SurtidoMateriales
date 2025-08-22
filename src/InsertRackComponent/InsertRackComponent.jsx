@@ -13,7 +13,7 @@ function InsertRackComponent() {
     
     const fetchRacks = async () => {
         try {
-            const response = await axios.get(`http://172.30.190.47:5000/rack`);
+            const response = await axios.get(`http://172.30.189.112:5000/rack`);
             setDataRack(response.data);
         } catch (error) {
             console.error("Error fetching racks");
@@ -33,7 +33,7 @@ function InsertRackComponent() {
     
         try {
             const newRack = { nombre };
-            await axios.post(`http://172.30.190.47:5000/rack`, newRack);
+            await axios.post(`http://172.30.189.112:5000/rack`, newRack);
             fetchRacks();
             setNombre('');
     

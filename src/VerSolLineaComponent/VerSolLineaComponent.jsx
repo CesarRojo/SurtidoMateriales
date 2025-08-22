@@ -6,57 +6,18 @@ import './VerSolicitudesLinea.css';
 import EditSolicitudModal from './EditSolicitudModal';
 
 function VerSolLineaComponent({ IdentLinea, shouldFetch, Floor }) {
-  // const [fechaInicio, setFechaInicio] = useState('');
-  // const [fechaFin, setFechaFin] = useState('');
-
-  // const getTurnoHoras = () => {
-  //   const ahora = new Date();
-    
-  //   let dia = String(ahora.getDate()).padStart(2, '0'); // Asegura que el día tenga dos dígitos
-  //   const mes = String(ahora.getMonth() + 1).padStart(2, '0'); // Los meses son 0-indexados, así que sumamos 1
-  //   const año = ahora.getFullYear();
-
-  //   const currentHour = new Date().getHours();
-  //   const currentMinutes = new Date().getMinutes();
-
-  //   if (currentHour === 16 && currentMinutes >= 0 && currentMinutes < 30) {
-  //     setFechaInicio(`${año}-${mes}-${dia}T06:00:00.000Z`);
-  //     setFechaFin(`${año}-${mes}-${dia}T16:30:00.000Z`);
-  //   } else if (currentHour >= 6 && currentHour < 16) {
-  //     setFechaInicio(`${año}-${mes}-${dia}T06:00:00.000Z`);
-  //     setFechaFin(`${año}-${mes}-${dia}T16:30:00.000Z`);
-  //   } else if (currentHour >= 16 && currentMinutes >= 31) {
-  //     setFechaInicio(`${año}-${mes}-${dia}T16:31:00.000Z`);
-  //     setFechaFin(`${año}-${mes}-${dia}T24:00:00.000Z`);
-  //   } else if (currentHour >= 17) {
-  //     setFechaInicio(`${año}-${mes}-${dia}T16:31:00.000Z`);
-  //     setFechaFin(`${año}-${mes}-${dia}T24:00:00.000Z`);
-  //   }else if(currentHour < 2){
-  //     setFechaFin(`${año}-${mes}-${dia}T02:00:00.000Z`); //Las 2am del dia actual
-  //     dia = String(ahora.getDate() - 1).padStart(2, '0');
-  //     setFechaInicio(`${año}-${mes}-${dia}T16:31:00.000Z`); //Las 16:31 del dia anterior
-  //   } else {
-  //     setFechaInicio(`${año}-${mes}-${dia}T06:00:00.000Z`);
-  //     setFechaFin(`${año}-${mes}-${dia}T16:30:00.000Z`);
-  //   }
-  // };
-
   const [dataSolicitudes, setDataSolicitudes] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSolicitud, setSelectedSolicitud] = useState(null);
 
   const fetchDataSolicitudes = async () => {
     try {
-      const response = await axios.get(`http://172.30.190.47:5000/solicitudes/area/${IdentLinea}`);
+      const response = await axios.get(`http://172.30.189.112:5000/solicitudes/area/${IdentLinea}`);
       setDataSolicitudes(response.data);
     } catch (error) {
       console.error("<<Error fetching data>>", error);
     }
   };
-
-  // useEffect(() => {
-  //   getTurnoHoras();
-  // }, [IdentLinea, shouldFetch]);
   
   useEffect(() => {
       fetchDataSolicitudes();
@@ -77,26 +38,9 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch, Floor }) {
     }
   };
 
-  // const getTurno = () => {
-  //   const currentHour = new Date().getHours();
-  //   const currentMinutes = new Date().getMinutes();
-
-  //   if (currentHour === 16 && currentMinutes >= 0 && currentMinutes < 30) {
-  //     return 'A'; // Incluye hasta las 16:29
-  //   } else if (currentHour >= 7 && currentHour < 16) {
-  //     return 'A'; // Desde las 7:00 AM hasta las 3:59 PM
-  //   } else if (currentHour === 16 && currentMinutes >= 31) {
-  //     return 'B'; // Desde las 4:31 PM (16:31) en adelante
-  //   } else if (currentHour >= 17 || (currentHour < 2)) {
-  //     return 'B'; // Desde las 5:00 PM hasta la 1:30 AM
-  //   } else {
-  //     return 'A'; // Cualquier otro caso (por si acaso)
-  //   }
-  // };
-
   const updateEstado = async (idSolicitud, nuevoEstado) => {
     try {
-      await axios.put(`http://172.30.190.47:5000/solicitudes/${idSolicitud}`, { estado: nuevoEstado });
+      await axios.put(`http://172.30.189.112:5000/solicitudes/${idSolicitud}`, { estado: nuevoEstado });
       setDataSolicitudes(prevSolicitudes => 
         prevSolicitudes.map(solicitud => 
           solicitud.idSolicitud === idSolicitud ? { ...solicitud, estado: nuevoEstado } : solicitud
@@ -122,23 +66,6 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch, Floor }) {
     ));
     toast.success("Solicitud actualizada correctamente!");
   };
-
-  // const filteredSolicitudes = dataSolicitudes.filter(solicitud => {
-  //   const hoy = new Date();
-  //   const dia = String(hoy.getDate()).padStart(2, '0'); // Asegura que el día tenga dos dígitos
-  //   const mes = String(hoy.getMonth() + 1).padStart(2, '0'); // Los meses son 0-indexados, así que sumamos 1
-  //   const año = hoy.getFullYear();
-  //   const fechaHoy = `${año}-${mes}-${dia}`; // Formato "YYYY-MM-DD"
-    
-  //   // Convierte la fecha de la solicitud a formato ISO y extrae solo la parte de la fecha
-  //   const fechaSolicitud = new Date(solicitud.fechaSolicitud).toISOString().split('T')[0];
-
-  //   // Compara las fechas de todos los registros de la tabla solicitudes, si NO coinciden las fechas ese registro NO se guarda en filteredSolicitudes
-  //   return fechaSolicitud === fechaHoy; 
-  // });
-
-  // const turnoActual = getTurno();
-  // const solicitudesFiltradas = dataSolicitudes.filter(solicitud => solicitud.Turno === turnoActual);
 
   const formatDateTimeFromDB = (dateString) => {
     // Suponiendo que dateString es algo como "2025-01-10 10:46:26.0000000" en la BD
@@ -182,8 +109,11 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch, Floor }) {
                   <input
                     type="checkbox"
                     checked={solicitud.estado === 'Urgente'}
-                    disabled={solicitud.estado !== 'Pendiente'}
-                    onChange={() => updateEstado(solicitud.idSolicitud, 'Urgente')}
+                    disabled={solicitud.estado !== 'Pendiente' && solicitud.estado !== 'Urgente'}
+                    onChange={() => {
+                      const nuevoEstado = solicitud.estado === 'Urgente' ? 'Pendiente' : 'Urgente';
+                      updateEstado(solicitud.idSolicitud, nuevoEstado);
+                    }}
                   />
                 </td>
                 <td>
