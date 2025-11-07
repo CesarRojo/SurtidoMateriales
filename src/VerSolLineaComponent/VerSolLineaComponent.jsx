@@ -12,7 +12,7 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch, Floor }) {
 
   const fetchDataSolicitudes = async () => {
     try {
-      const response = await axios.get(`http://172.30.189.112:5000/solicitudes/area/${IdentLinea}`);
+      const response = await axios.get(`http://172.30.189.120:5000/solicitudes/area/${IdentLinea}`);
       setDataSolicitudes(response.data);
     } catch (error) {
       console.error("<<Error fetching data>>", error);
@@ -40,7 +40,7 @@ function VerSolLineaComponent({ IdentLinea, shouldFetch, Floor }) {
 
   const updateEstado = async (idSolicitud, nuevoEstado) => {
     try {
-      await axios.put(`http://172.30.189.112:5000/solicitudes/${idSolicitud}`, { estado: nuevoEstado });
+      await axios.put(`http://172.30.189.120:5000/solicitudes/${idSolicitud}`, { estado: nuevoEstado });
       setDataSolicitudes(prevSolicitudes => 
         prevSolicitudes.map(solicitud => 
           solicitud.idSolicitud === idSolicitud ? { ...solicitud, estado: nuevoEstado } : solicitud

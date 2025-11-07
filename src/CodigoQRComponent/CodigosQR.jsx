@@ -57,7 +57,8 @@ const CodigosQR = () => {
   useEffect(() => {
     const fetchLineas = async () => {
       try {
-        const response = await axios.get('http://172.30.189.112:5000/lines');
+        const response = await axios.get('http://172.30.189.120:5000/lines');
+        console.log(response.data);
         const uniqueLineas = [];
         const seenFloors = new Set(); // Usar un Set para rastrear los Floors que ya fueron vistos
   
@@ -82,7 +83,7 @@ const CodigosQR = () => {
     const fetchMateriales = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://172.30.189.112:5000/material/floor', {
+        const response = await axios.get('http://172.30.189.120:5000/material/floor', {
           params: {
             floor: selectedLinea,
           }
@@ -110,7 +111,6 @@ const CodigosQR = () => {
   const handleLineaChange = (e) => {
     const selectedIdLinea = e.target.value;
     setSelectedLinea(selectedIdLinea);
-    console.log("ID Línea seleccionada:", selectedIdLinea); // Muestra el ID de la línea seleccionada
   };
 
   const MyDocument = () => (

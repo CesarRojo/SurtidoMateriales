@@ -64,7 +64,7 @@ function ModalTablet({ isOpen, onClose, onMaterialSelect, IdLinea, Floor, onForm
 
     const fetchMaterialId = async (materialNumber) => {
         try {
-            const response = await axios.get(`http://172.30.189.112:5000/material/floor2`, {
+            const response = await axios.get(`http://172.30.189.120:5000/material/floor2`, {
                 params: {
                     floor: Floor, //Esto para que aparezcan los materiales correspondientes de cada FLOOR
                     numero: materialNumber,
@@ -72,7 +72,7 @@ function ModalTablet({ isOpen, onClose, onMaterialSelect, IdLinea, Floor, onForm
             });
             setMaterialId(response.data.idMaterial);
         } catch (error) {
-            console.log("<<Error fetching data>>", error);
+            console.error("<<Error fetching data>>", error);
         }
     };
 
@@ -108,7 +108,6 @@ function ModalTablet({ isOpen, onClose, onMaterialSelect, IdLinea, Floor, onForm
         event.preventDefault();
 
         if (!materialId || !selectedType || !quantity) {
-            console.log("materialId",materialId);
             setErrorMessage("Por favor, complete todos los campos o escanee un material correcto.");
             return;
         }
@@ -128,8 +127,7 @@ function ModalTablet({ isOpen, onClose, onMaterialSelect, IdLinea, Floor, onForm
         };
 
         try {
-            const response = await axios.post(`http://172.30.189.112:5000/solicitudes/`, newRequest);
-            console.log("Solicitud enviada con éxito:", response.data, newRequest);
+            const response = await axios.post(`http://172.30.189.120:5000/solicitudes/`, newRequest);
             toast.success("Solicitud enviada con éxito!");
             setSelectedType("");
             setQuantity("");

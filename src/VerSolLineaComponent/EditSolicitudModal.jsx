@@ -12,7 +12,7 @@ const EditSolicitudModal = ({ isOpen, onClose, solicitud, onUpdate, fetchDataSol
     useEffect(() => {
         const fetchDataMaterial = async () => {
             try {
-                const response = await axios.get(`http://172.30.189.112:5000/material/floor`, {
+                const response = await axios.get(`http://172.30.189.120:5000/material/floor`, {
                     params: {
                         floor: Floor,
                     }
@@ -23,7 +23,7 @@ const EditSolicitudModal = ({ isOpen, onClose, solicitud, onUpdate, fetchDataSol
                 }));
                 setDataMaterial(formattedMaterials);
             } catch (error) {
-                console.log("<<Error fetching data>>", error);
+                console.error("<<Error fetching data>>", error);
             }
         };
 
@@ -48,7 +48,7 @@ const EditSolicitudModal = ({ isOpen, onClose, solicitud, onUpdate, fetchDataSol
     
         try {
             // Actualiza la solicitud
-            await axios.put(`http://172.30.189.112:5000/solicitudes/${solicitud.idSolicitud}`, updatedSolicitud);
+            await axios.put(`http://172.30.189.120:5000/solicitudes/${solicitud.idSolicitud}`, updatedSolicitud);
             // Actualiza el estado en el front-end
             onUpdate({ ...solicitud, ...updatedSolicitud });
             fetchDataSolicitudes();

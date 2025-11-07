@@ -7,6 +7,7 @@ import InsertMaterComponent from "../InsertMaterComponent/InsertMaterComponent";
 import InsertLineasComponent from "../InsertLineasComponent/InsertLineasComponent";
 import InsertRackComponent from "../InsertRackComponent/InsertRackComponent";
 import CodigosQR from "../CodigoQRComponent/CodigosQR";
+import AdmSolicitudes from "../AdmSolicitudesComponent/AdmSolicitudesComponent";
 
 function PanelAdministracion() {
   const [componenteActivo, setComponenteActivo] = useState(null);
@@ -28,6 +29,8 @@ function PanelAdministracion() {
         return <InsertRackComponent />;
       case 'codigos-qr':
         return <CodigosQR />;
+      case 'adm-solicitudes':
+        return <AdmSolicitudes />;
       default:
         return null; // No renderiza nada si no hay componente activo
     }
@@ -70,6 +73,12 @@ function PanelAdministracion() {
             onClick={() => handleCardClick('insertar-racks')}
           >
             <h2>Insertar Rack</h2>
+          </div>
+          <div 
+            className="panel-card" 
+            onClick={() => handleCardClick('adm-solicitudes')}
+          >
+            <h2>Solicitudes</h2>
           </div>
         </div>
       </header>

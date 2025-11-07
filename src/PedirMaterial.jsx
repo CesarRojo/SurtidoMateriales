@@ -20,10 +20,10 @@ function PedirMaterial() {
   useEffect(() => {
     const fetchDataLinea = async () => {
       try {
-        const response = await axios.get(`http://172.30.189.112:5000/lines/`);
+        const response = await axios.get(`http://172.30.189.120:5000/lines/`);
         setDataLinea(response.data);
       } catch (error) {
-        console.log("<<Error fetching data>>", error);
+        console.error("<<Error fetching data>>", error);
       }
     };
   

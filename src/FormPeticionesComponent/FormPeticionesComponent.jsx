@@ -18,7 +18,7 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit, Floor }) {
 
         const fetchDataMaterial = async () => {
             try {
-                const response = await axios.get(`http://172.30.189.112:5000/material/floor`, {
+                const response = await axios.get(`http://172.30.189.120:5000/material/floor`, {
                     params: {
                         floor: Floor, //Esto para que aparezcan los materiales correspondientes de cada FLOOR 
                     }
@@ -29,7 +29,7 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit, Floor }) {
                 }));
                 setDataMaterial(formattedMaterials);
             } catch (error) {
-                console.log("<<Error fetching data>>", error);
+                console.error("<<Error fetching data>>", error);
             }
         };
 
@@ -89,7 +89,7 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit, Floor }) {
         };
 
         try {
-            const response = await axios.post(`http://172.30.189.112:5000/solicitudes/`, newRequest);
+            const response = await axios.post(`http://172.30.189.120:5000/solicitudes/`, newRequest);
             toast.success ("Solicitud enviada con éxito!");
             // Limpiar el formulario
             setSelectedMaterial(null);
