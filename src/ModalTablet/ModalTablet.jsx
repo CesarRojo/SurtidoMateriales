@@ -64,7 +64,7 @@ function ModalTablet({ isOpen, onClose, onMaterialSelect, IdLinea, Floor, onForm
 
     const fetchMaterialId = async (materialNumber) => {
         try {
-            const response = await axios.get(`http://172.30.189.120:5000/material/floor2`, {
+            const response = await axios.get(`http://172.30.189.116:5000/material/floor2`, {
                 params: {
                     floor: Floor, //Esto para que aparezcan los materiales correspondientes de cada FLOOR
                     numero: materialNumber,
@@ -127,7 +127,7 @@ function ModalTablet({ isOpen, onClose, onMaterialSelect, IdLinea, Floor, onForm
         };
 
         try {
-            const response = await axios.post(`http://172.30.189.120:5000/solicitudes/`, newRequest);
+            const response = await axios.post(`http://172.30.189.116:5000/solicitudes/`, newRequest);
             toast.success("Solicitud enviada con éxito!");
             setSelectedType("");
             setQuantity("");

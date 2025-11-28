@@ -12,12 +12,12 @@ const EditMaterialModal = ({ isOpen, onClose, material, onUpdate, onDelete, fetc
 
     useEffect(() => {
         const fetchLines = async () => {
-            const response = await axios.get(`http://172.30.189.120:5000/lines`);
+            const response = await axios.get(`http://172.30.189.116:5000/lines`);
             setDataLines(response.data);
         };
 
         const fetchRacks = async () => {
-            const response = await axios.get(`http://172.30.189.120:5000/rack`);
+            const response = await axios.get(`http://172.30.189.116:5000/rack`);
             setDataRacks(response.data);
         };
 
@@ -43,7 +43,7 @@ const EditMaterialModal = ({ isOpen, onClose, material, onUpdate, onDelete, fetc
         };
         const confirmUpdate = window.confirm("¿Estás seguro de que deseas actualizar este material?");
         if (confirmUpdate) {
-            await axios.put(`http://172.30.189.120:5000/material/${material.idMaterial}`, updatedMaterial);
+            await axios.put(`http://172.30.189.116:5000/material/${material.idMaterial}`, updatedMaterial);
             onUpdate(updatedMaterial);
             fetchData();
             onClose();
@@ -53,7 +53,7 @@ const EditMaterialModal = ({ isOpen, onClose, material, onUpdate, onDelete, fetc
     const handleDelete = async () => {
         const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este material?");
         if (confirmDelete) {
-            await axios.delete(`http://172.30.189.120:5000/material/${material.idMaterial}`);
+            await axios.delete(`http://172.30.189.116:5000/material/${material.idMaterial}`);
             onDelete(material.idMaterial);
             fetchData();
             onClose();

@@ -12,7 +12,7 @@ function MenuLineasComponent() {
 
   const fetchLineas = async () => {
     try {
-      const lineasResponse = await axios.get(`http://172.30.189.120:5000/lines/`);
+      const lineasResponse = await axios.get(`http://172.30.189.116:5000/lines/`);
       setLineas(lineasResponse.data);
     } catch (error) {
       console.error("<<Error fetching lines>>", error);
@@ -21,7 +21,7 @@ function MenuLineasComponent() {
 
   const fetchData = async () => {
     try {
-      const solicitudesResponse = await axios.get(`http://172.30.189.120:5000/solicitudes/fecha`);
+      const solicitudesResponse = await axios.get(`http://172.30.189.116:5000/solicitudes/fecha`);
       setSolicitudes(solicitudesResponse.data);
     } catch (error) {
       console.error("<<Error fetching data>>", error);
@@ -32,7 +32,7 @@ function MenuLineasComponent() {
     fetchData();
     fetchLineas();
 
-    const socket = io('http://172.30.189.120:5000'); // URL del backend Socket.IO
+    const socket = io('http://172.30.189.116:5000'); // URL del backend Socket.IO
 
     socket.on('connect', () => {
       console.log('Socket.IO conectado');

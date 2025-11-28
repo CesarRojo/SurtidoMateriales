@@ -13,7 +13,7 @@ function VerSolicitudes() {
 
   const fetchDataSolicitudes = async () => {
     try {
-      const response = await axios.get(`http://172.30.189.120:5000/solicitudes/area/${IdentLinea}`);
+      const response = await axios.get(`http://172.30.189.116:5000/solicitudes/area/${IdentLinea}`);
       setDataSolicitudes(response.data);
     } catch (error) {
       console.error("<<Error fetching data>>", error);
@@ -65,7 +65,7 @@ function VerSolicitudes() {
   // Función para actualizar el estado de las solicitudes
   const updateEstado = async (idSolicitud, nuevoEstado) => {
     try {
-      await axios.put(`http://172.30.189.120:5000/solicitudes/${idSolicitud}`, { estado: nuevoEstado });
+      await axios.put(`http://172.30.189.116:5000/solicitudes/${idSolicitud}`, { estado: nuevoEstado });
       // Actualizar el estado localmente
       setDataSolicitudes(prevSolicitudes => 
         prevSolicitudes.map(solicitud => 

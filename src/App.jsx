@@ -1,4 +1,5 @@
 import PedirMaterial from "./PedirMaterial"
+import PedirCircuito from "./PedirCircuito";
 import VerSolicitudes from "./VerSolicitudes"
 import MenuLineasComponent from "./MenuLineasComponent/MenuLineasComponent";
 import MenuPrincipal from './MenuPrincipal/MenuPrincipal'
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<MenuPrincipal />} />
         <Route path="/:IdentLinea" element={<PedirMaterial />} />
+        <Route path="/circuitos/:IdentLinea" element={<PedirCircuito />} />
         <Route path="/solicitudes" element={<MenuLineasComponent />} />
         <Route path="/solicitudes/:IdentLinea" element={<VerSolicitudes />} />
         <Route path="/admin" element={<PanelAdminComponent />} />

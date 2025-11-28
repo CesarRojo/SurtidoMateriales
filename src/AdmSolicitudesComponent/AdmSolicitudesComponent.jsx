@@ -36,7 +36,7 @@ const AdmSolicitudes = () => {
         (key) => (params[key] === '' || params[key] == null) && delete params[key]
       );
 
-      const res = await axios.get('http://172.30.189.120:5000/solicitudes/filtered', { params });
+      const res = await axios.get('http://172.30.189.116:5000/solicitudes/filtered', { params });
       setSolicitudes(res.data.data);
       setPagination((prev) => ({
         ...prev,
@@ -52,7 +52,7 @@ const AdmSolicitudes = () => {
 
   const fetchLineas = async () => {
     try {
-        const res = await axios.get('http://172.30.189.120:5000/lines');
+        const res = await axios.get('http://172.30.189.116:5000/lines');
         setLineas(res.data);
     } catch (error) {
         console.error('Error fetching lineas', error);

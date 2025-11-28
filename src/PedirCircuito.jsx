@@ -2,21 +2,21 @@ import axios from "axios";
 import { useParams } from "react-router-dom"
 import { useEffect, useState } from "react";
 import ErrorComponent from "./errorComponent/errorComponent";
-import FormPeticionesComponent from "./FormPeticionesComponent/FormPeticionesComponent";
-import VerSolLineaComponent from "./VerSolLineaComponent/VerSolLineaComponent";
+import FormPeticionesCircuito from "./FormPeticionesCircuito/FormPeticionesCircuito";
+import VerSolLineaCircuito from "./VerSolLineaCircuito/VerSolLineaCircuito";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './PedirMaterial.css'
 
-function PedirMaterial() {
+function PedirCircuito() {
   const [dataLinea, setDataLinea] = useState(null);
   const [isValid, setIsValid] = useState(false);
   const [nombreLinea, setNombreLinea] = useState(null);
   const [floorLinea, setFloorLinea] = useState(null);
   const [idLinea, setIdLinea] = useState(null);
-  const [shouldFetchSolicitudes, setShouldFetchSolicitudes] = useState(false); // Estado para controlar la actualización
+  const [shouldFetchSolicitudes, setShouldFetchSolicitudes] = useState(false);
   const { IdentLinea } = useParams();
-  
+
   useEffect(() => {
     const fetchDataLinea = async () => {
       try {
@@ -26,21 +26,16 @@ function PedirMaterial() {
         console.error("<<Error fetching data>>", error);
       }
     };
-  
+
     fetchDataLinea();
   }, []);
-  
-  //useEffect para determinar el isValid y mostrar el componente en caso de que la linea si exista o mostrar el componente de error
-  //Sirve para los casos en los que una persona manualmente llegue a poner en la url una ruta con el id de una linea que no exista
+
   useEffect(() => {
     if (dataLinea) {
-      // Extraer los IdentificadoresLinea (los idLinea) de dataLinea
       const identificadores = dataLinea.map(linea => linea.idLinea);
-      // Comprobar si IdentLinea está en el array de identificadores
       const isIdentLineaValid = identificadores.includes(parseInt(IdentLinea));
       setIsValid(isIdentLineaValid);
 
-      // Si es válido, obtener el nombre correspondiente
       if (isIdentLineaValid) {
         const lineaEncontrada = dataLinea.find(linea => linea.idLinea === parseInt(IdentLinea));
         setNombreLinea(lineaEncontrada ? lineaEncontrada.nombre : null);
@@ -51,40 +46,39 @@ function PedirMaterial() {
       }
     }
   }, [dataLinea, IdentLinea]);
-  
+
   const handleFormSubmit = () => {
-    // Cambia el estado para indicar que se deben volver a cargar las solicitudes
     setShouldFetchSolicitudes(prev => !prev);
   };
 
   return (
-      <>
+    <>
       <ToastContainer />
-        {isValid ? (
-          <>
-            <div className="content">
-                <div className="form-container">
-                    <h1>Línea {nombreLinea}</h1>
-                    <FormPeticionesComponent 
-                        IdLinea={idLinea}
-                        Floor={floorLinea}
-                        onFormSubmit={handleFormSubmit} 
-                    />
-                </div>
-                <div className="solicitudes-contenedor">
-                    <VerSolLineaComponent 
-                        IdentLinea={IdentLinea}
-                        shouldFetch={shouldFetchSolicitudes} 
-                        Floor={floorLinea}
-                    />
-                </div>
+      {isValid ? (
+        <>
+          <div className="content">
+            <div className="form-container">
+              <h1>Línea {nombreLinea}</h1>
+              <FormPeticionesCircuito 
+                IdLinea={idLinea}
+                Floor={floorLinea}
+                onFormSubmit={handleFormSubmit} 
+              />
             </div>
-          </>
-        ) : (
-          <ErrorComponent />
-        )}
-      </>
-    )
-  }
-  
-export default PedirMaterial
+            <div className="solicitudes-contenedor">
+              <VerSolLineaCircuito 
+                IdentLinea={IdentLinea}
+                shouldFetch={shouldFetchSolicitudes} 
+                Floor={floorLinea}
+              />
+            </div>
+          </div>
+        </>
+      ) : (
+        <ErrorComponent />
+      )}
+    </>
+  )
+}
+
+export default PedirCircuito;

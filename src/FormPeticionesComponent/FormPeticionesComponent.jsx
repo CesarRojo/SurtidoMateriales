@@ -18,7 +18,7 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit, Floor }) {
 
         const fetchDataMaterial = async () => {
             try {
-                const response = await axios.get(`http://172.30.189.120:5000/material/floor`, {
+                const response = await axios.get(`http://172.30.189.116:5000/material/floor`, {
                     params: {
                         floor: Floor, //Esto para que aparezcan los materiales correspondientes de cada FLOOR 
                     }
@@ -35,34 +35,6 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit, Floor }) {
 
         fetchDataMaterial();
     }, []);
-
-    // const getTurno = () => {
-    //     const currentHour = new Date().getHours();
-    //     const currentMinutes = new Date().getMinutes();
-    
-    //     if (currentHour === 16 && currentMinutes >= 0 && currentMinutes < 30) {
-    //       return 'A'; // Incluye hasta las 16:29
-    //     } else if (currentHour >= 7 && currentHour < 16) {
-    //       return 'A'; // Desde las 7:00 AM hasta las 3:59 PM
-    //     } else if (currentHour === 16 && currentMinutes >= 31) {
-    //       return 'B'; // Desde las 4:31 PM (16:31) en adelante
-    //     } else if (currentHour >= 17 || (currentHour < 2)) {
-    //       return 'B'; // Desde las 5:00 PM hasta la 1:30 AM
-    //     } else {
-    //       return 'A'; // Cualquier otro caso (por si acaso)
-    //     }
-    //   };
-
-    // const formatDate = (date) => {
-    //     const year = date.getFullYear();
-    //     const month = String(date.getMonth() + 1).padStart(2, '0'); // Meses de 0-11
-    //     const day = String(date.getDate()).padStart(2, '0');
-    //     const hours = String(date.getHours()).padStart(2, '0');
-    //     const minutes = String(date.getMinutes()).padStart(2, '0');
-    //     const seconds = String(date.getSeconds()).padStart(2, '0');
-    
-    //     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
-    // };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -89,7 +61,7 @@ function FormPeticionesComponent({ IdLinea, onFormSubmit, Floor }) {
         };
 
         try {
-            const response = await axios.post(`http://172.30.189.120:5000/solicitudes/`, newRequest);
+            const response = await axios.post(`http://172.30.189.116:5000/solicitudes/`, newRequest);
             toast.success ("Solicitud enviada con éxito!");
             // Limpiar el formulario
             setSelectedMaterial(null);

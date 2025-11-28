@@ -26,7 +26,7 @@ function InsertMaterComponent() {
 
     const fetchData = async () => {
         try {
-            const response = await axios.get(`http://172.30.189.120:5000/material`);
+            const response = await axios.get(`http://172.30.189.116:5000/material`);
             setDataMater(response.data);
             setFilteredMaterials(response.data); // Inicializar los materiales filtrados
         } catch (error) {
@@ -36,7 +36,7 @@ function InsertMaterComponent() {
 
     const fetchLines = async () => {
         try {
-            const response = await axios.get(`http://172.30.189.120:5000/lines`);
+            const response = await axios.get(`http://172.30.189.116:5000/lines`);
             const uniqueLineas = [];
             const seenFloors = new Set();
 
@@ -55,7 +55,7 @@ function InsertMaterComponent() {
 
     const fetchRacks = async () => {
         try {
-            const response = await axios.get(`http://172.30.189.120:5000/rack`);
+            const response = await axios.get(`http://172.30.189.116:5000/rack`);
             setDataRacks(response.data);
         } catch (error) {
             console.error("Error fetching racks");
@@ -99,7 +99,7 @@ function InsertMaterComponent() {
                 floor: selectedFloor, 
                 idRack: parseInt(selectedRackId),
             };
-            await axios.post(`http://172.30.189.120:5000/material`, newMaterial);
+            await axios.post(`http://172.30.189.116:5000/material`, newMaterial);
             setDataMater([...dataMater, newMaterial]);
             setNumero("");
             setNombre("");
@@ -156,7 +156,7 @@ function InsertMaterComponent() {
         formData.append("file", file);
 
         try {
-            const res = await axios.post(`http://172.30.189.120:5000/material/bulk-update`, formData, {
+            const res = await axios.post(`http://172.30.189.116:5000/material/bulk-update`, formData, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 },
