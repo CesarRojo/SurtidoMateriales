@@ -15,7 +15,7 @@ const EditLineasModal = ({ isOpen, onClose, line, onUpdate, onDelete, fetchLines
 
     const handleUpdate = async () => {
         const updatedLine = { nombre, Floor: floor };
-        await axios.put(`http://172.30.189.116:5000/lines/${line.idLinea}`, updatedLine);
+        await axios.put(`http://172.30.189.118:5000/lines/${line.idLinea}`, updatedLine);
         onUpdate(updatedLine);
         fetchLines();
         onClose();
@@ -24,7 +24,7 @@ const EditLineasModal = ({ isOpen, onClose, line, onUpdate, onDelete, fetchLines
     const handleDelete = async () => {
         const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar esta línea?");
         if (confirmDelete) {
-            await axios.delete(`http://172.30.189.116:5000/lines/${line.idLinea}`);
+            await axios.delete(`http://172.30.189.118:5000/lines/${line.idLinea}`);
             onDelete(line.idLinea);
             fetchLines();
             onClose();

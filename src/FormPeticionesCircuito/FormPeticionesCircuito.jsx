@@ -17,14 +17,14 @@ function FormPeticionesCircuito({ IdLinea, onFormSubmit, Floor }) {
   useEffect(() => {
     const fetchDataCircuito = async () => {
       try {
-        const response = await axios.get(` http://172.30.189.116:5000/circuito/floor`,  {
+        const response = await axios.get(` http://172.30.189.118:5000/circuito/floor`,  {
           params: {
             floor: Floor,
           }
         });
         const formattedCircuitos = response.data.map(circuito => ({
           value: circuito.idCircuito,
-          label: circuito.numero
+          label: circuito.nombre
         }));
         setDataCircuito(formattedCircuitos);
       } catch (error) {
@@ -38,7 +38,7 @@ function FormPeticionesCircuito({ IdLinea, onFormSubmit, Floor }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (!selectedCircuito || !selectedType || !quantity) {
+    if (!selectedCircuito) {
       setErrorMessage("Por favor, complete todos los campos.");
       return;
     }
@@ -46,19 +46,15 @@ function FormPeticionesCircuito({ IdLinea, onFormSubmit, Floor }) {
     setErrorMessage("");
 
     const newRequest = {
-      cantidad: parseInt(quantity),
       estado: "Pendiente",
       idCircuito: parseInt(selectedCircuito.value),
-      tipoCantidad: selectedType,
       idLinea: IdLinea,
     };
 
     try {
-      await axios.post(` http://172.30.189.116:5000/solicitudCircuito/`,  newRequest);
+      await axios.post(`http://172.30.189.118:5000/solicitudCircuito/`,  newRequest);
       toast.success("Solicitud de circuito enviada con éxito!");
       setSelectedCircuito(null);
-      setSelectedType("");
-      setQuantity("");
       onFormSubmit();
     } catch (error) {
       console.error("Error al enviar la solicitud de circuito:", error);
@@ -95,35 +91,6 @@ function FormPeticionesCircuito({ IdLinea, onFormSubmit, Floor }) {
             required
           />
         </div>
-
-        <div>
-          <label htmlFor="type">Tipo:</label>
-          <select
-            id="type"
-            value={selectedType}
-            onChange={(e) => setSelectedType(e.target.value)}
-            required
-          >
-            <option value="">Seleccione un tipo</option>
-            <option value="pieza">Pieza</option>
-            <option value="bolsa">Bolsa</option>
-            <option value="caja">Caja</option>
-          </select>
-        </div>
-
-        <div>
-          <label htmlFor="quantity">Cantidad:</label>
-          <input
-            type="number"
-            id="quantity"
-            value={quantity}
-            onChange={(e) => setQuantity(e.target.value)}
-            min="1"
-            required
-          />
-        </div>
-
-        {/* {errorMessage && <p className="error-message">{errorMessage}</p>} */}
 
         <button type="submit" className="enviarFormPet">Enviar</button>
       </form>

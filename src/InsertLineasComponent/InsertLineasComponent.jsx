@@ -14,7 +14,7 @@ const InsertLineasComponent = () => {
 
   const fetchLines = async () => {
     try {
-      const response = await axios.get('http://172.30.189.116:5000/lines');
+      const response = await axios.get('http://172.30.189.118:5000/lines');
       setLines(response.data);
     } catch (error) {
       console.error('Error fetching lines:', error);
@@ -25,7 +25,7 @@ const InsertLineasComponent = () => {
     e.preventDefault();
     try {
       const newLine = { nombre, Floor: floor };
-      await axios.post('http://172.30.189.116:5000/lines', newLine);
+      await axios.post('http://172.30.189.118:5000/lines', newLine);
       fetchLines();
       setNombre('');
       setFloor('');

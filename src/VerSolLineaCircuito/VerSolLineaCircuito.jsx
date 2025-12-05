@@ -12,7 +12,7 @@ function VerSolLineaCircuito({ IdentLinea, shouldFetch, Floor }) {
 
   const fetchDataSolicitudes = async () => {
     try {
-      const response = await axios.get(` http://172.30.189.116:5000/solicitudCircuito/area/${IdentLinea }`);
+      const response = await axios.get(`http://172.30.189.118:5000/solicitudCircuito/area/${IdentLinea}`);
       setDataSolicitudes(response.data);
     } catch (error) {
       console.error("<<Error fetching data>>", error);
@@ -38,12 +38,12 @@ function VerSolLineaCircuito({ IdentLinea, shouldFetch, Floor }) {
     }
   };
 
-  const updateEstado = async (idSolicitud, nuevoEstado) => {
+  const updateEstado = async (idSolicitudC, nuevoEstado) => {
     try {
-      await axios.put(` http://172.30.189.116:5000/solicitudCircuito/${idSolicitud }`, { estado: nuevoEstado });
+      await axios.put(`http://172.30.189.118:5000/solicitudCircuito/${idSolicitudC}`, { estado: nuevoEstado });
       setDataSolicitudes(prevSolicitudes => 
         prevSolicitudes.map(solicitud => 
-          solicitud.idSolicitud === idSolicitud ? { ...solicitud, estado: nuevoEstado } : solicitud
+          solicitud.idSolicitudC === idSolicitudC ? { ...solicitud, estado: nuevoEstado } : solicitud
         )
       );
     } catch (error) {
@@ -89,7 +89,6 @@ function VerSolLineaCircuito({ IdentLinea, shouldFetch, Floor }) {
               <th>ID Solicitud</th>
               <th>Línea</th>
               <th>Circuito</th>
-              <th>Cantidad</th>
               <th>Estado</th>
               <th>Fecha Solicitud</th>
               <th>Urgente</th>
@@ -98,11 +97,10 @@ function VerSolLineaCircuito({ IdentLinea, shouldFetch, Floor }) {
           </thead>
           <tbody className="solLinea-tb">
             {dataSolicitudes.map((solicitud) => (
-              <tr key={solicitud.idSolicitud} style={{ backgroundColor: getBackgroundColor(solicitud.estado) }}>
-                <td onClick={() => handleRowClick(solicitud)}>{solicitud.idSolicitud}</td>
+              <tr key={solicitud.idSolicitudC} style={{ backgroundColor: getBackgroundColor(solicitud.estado) }}>
+                <td onClick={() => handleRowClick(solicitud)}>{solicitud.idSolicitudC}</td>
                 <td onClick={() => handleRowClick(solicitud)}>{solicitud.linea.nombre}</td>
-                <td onClick={() => handleRowClick(solicitud)}>{solicitud.circuito.numero}</td>
-                <td onClick={() => handleRowClick(solicitud)}>{solicitud.cantidad} {solicitud.tipoCantidad}</td>
+                <td onClick={() => handleRowClick(solicitud)}>{solicitud.circuito.nombre}</td>
                 <td onClick={() => handleRowClick(solicitud)}>{solicitud.estado}</td>
                 <td onClick={() => handleRowClick(solicitud)}>{formatDateTimeFromDB(solicitud.fechaSolicitud)}</td>
                 <td>
@@ -112,7 +110,7 @@ function VerSolLineaCircuito({ IdentLinea, shouldFetch, Floor }) {
                     disabled={solicitud.estado !== 'Pendiente' && solicitud.estado !== 'Urgente'}
                     onChange={() => {
                       const nuevoEstado = solicitud.estado === 'Urgente' ? 'Pendiente' : 'Urgente';
-                      updateEstado(solicitud.idSolicitud, nuevoEstado);
+                      updateEstado(solicitud.idSolicitudC, nuevoEstado);
                     }}
                   />
                 </td>
@@ -120,7 +118,7 @@ function VerSolLineaCircuito({ IdentLinea, shouldFetch, Floor }) {
                   <input
                     type="checkbox"
                     checked={solicitud.estado === 'Recibido'}
-                    onChange={() => updateEstado(solicitud.idSolicitud, 'Recibido')}
+                    onChange={() => updateEstado(solicitud.idSolicitudC, 'Recibido')}
                   />
                 </td>
               </tr>

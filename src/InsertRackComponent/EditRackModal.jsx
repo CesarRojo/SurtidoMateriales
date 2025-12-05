@@ -13,7 +13,7 @@ const EditRackModal = ({ isOpen, onClose, rack, onUpdate, onDelete, fetchRacks }
 
     const handleUpdate = async () => {
         const updatedRack = { nombre };
-        await axios.put(`http://172.30.189.116:5000/rack/${rack.idRack}`, updatedRack);
+        await axios.put(`http://172.30.189.118:5000/rack/${rack.idRack}`, updatedRack);
         onUpdate({ ...rack, nombre });
         fetchRacks();
         onClose();
@@ -22,7 +22,7 @@ const EditRackModal = ({ isOpen, onClose, rack, onUpdate, onDelete, fetchRacks }
     const handleDelete = async () => {
         const confirmDelete = window.confirm("¿Estás seguro de que deseas eliminar este rack?");
         if (confirmDelete) {
-            await axios.delete(`http://172.30.189.116:5000/rack/${rack.idRack}`);
+            await axios.delete(`http://172.30.189.118:5000/rack/${rack.idRack}`);
             onDelete(rack.idRack);
             fetchRacks();
             onClose();

@@ -13,7 +13,7 @@ function VerSolicitudes() {
 
   const fetchDataSolicitudes = async () => {
     try {
-      const response = await axios.get(`http://172.30.189.118:5000/solicitudes/area/${IdentLinea}`);
+      const response = await axios.get(`http://172.30.189.118:5000/solicitudCircuito/area/${IdentLinea}`);
       setDataSolicitudes(response.data);
     } catch (error) {
       console.error("<<Error fetching data>>", error);
@@ -63,13 +63,13 @@ function VerSolicitudes() {
   };
 
   // Función para actualizar el estado de las solicitudes
-  const updateEstado = async (idSolicitud, nuevoEstado) => {
+  const updateEstado = async (idSolicitudC, nuevoEstado) => {
     try {
-      await axios.put(`http://172.30.189.118:5000/solicitudes/${idSolicitud}`, { estado: nuevoEstado });
+      await axios.put(`http://172.30.189.118:5000/solicitudCircuito/${idSolicitudC}`, { estado: nuevoEstado });
       // Actualizar el estado localmente
       setDataSolicitudes(prevSolicitudes => 
         prevSolicitudes.map(solicitud => 
-          solicitud.idSolicitud === idSolicitud ? { ...solicitud, estado: nuevoEstado } : solicitud
+          solicitud.idSolicitudC === idSolicitudC ? { ...solicitud, estado: nuevoEstado } : solicitud
         )
       );
     } catch (error) {
@@ -98,7 +98,7 @@ function VerSolicitudes() {
 
   return (
     <div className="solicitudes-container">
-      <h1>Lista de Solicitudes de Materiales</h1>
+      <h1>Lista de Solicitudes de circuitos</h1>
       <div className="filter-container">
         <select value={estadoFiltro} onChange={(e) => setEstadoFiltro(e.target.value)}>
           <option value="">Filtrar por Estado</option>
@@ -114,9 +114,7 @@ function VerSolicitudes() {
             <tr>
               <th>ID Solicitud</th>
               <th>Línea</th>
-              <th>Rack</th>
-              <th>Material</th>
-              <th>Cantidad</th>
+              <th>Circuito</th>
               <th>Estado</th>
               <th>Fecha Solicitud</th>
               <th>Acciones</th>
@@ -124,27 +122,25 @@ function VerSolicitudes() {
           </thead>
           <tbody>
             {filteredSolicitudes.map((solicitud) => (
-              <tr key={solicitud.idSolicitud} 
+              <tr key={solicitud.idSolicitudC} 
                 style={{ 
                   backgroundColor: getBackgroundColor(solicitud.estado),
                   color: solicitud.estado === 'Urgente' ? 'white' : 'inherit' 
                 }}>
-                <td>{solicitud.idSolicitud}</td>
+                <td>{solicitud.idSolicitudC}</td>
                 <td>{solicitud.linea.nombre}</td>
-                <td>{solicitud.material && solicitud.material.rack ? solicitud.material.rack.nombre : 'Sin Rack'}</td>
-                <td>{solicitud.material.numero}</td>
-                <td>{solicitud.cantidad} {solicitud.tipoCantidad}</td>
+                <td>{solicitud.circuito.nombre}</td>
                 <td>{solicitud.estado}</td>
                 <td>{formatDateTimeFromDB(solicitud.fechaSolicitud)}</td>
                 <td>
                   <button 
-                    onClick={() => updateEstado(solicitud.idSolicitud, 'Pendiente')}
+                    onClick={() => updateEstado(solicitud.idSolicitudC, 'Pendiente')}
                     disabled={solicitud.estado === 'Pendiente' || solicitud.estado === 'Recibido' || solicitud.estado === 'Urgente'}
                   >
                     Marcar como Pendiente
                   </button>
                   <button 
-                    onClick={() => updateEstado(solicitud.idSolicitud, 'Enviado')}
+                    onClick={() => updateEstado(solicitud.idSolicitudC, 'Enviado')}
                     disabled={solicitud.estado === 'Enviado' || solicitud.estado === 'Recibido'}
                   >
                     Marcar como Enviado

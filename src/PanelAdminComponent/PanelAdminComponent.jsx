@@ -8,6 +8,7 @@ import InsertLineasComponent from "../InsertLineasComponent/InsertLineasComponen
 import InsertRackComponent from "../InsertRackComponent/InsertRackComponent";
 import CodigosQR from "../CodigoQRComponent/CodigosQR";
 import AdmSolicitudes from "../AdmSolicitudesComponent/AdmSolicitudesComponent";
+import InsertCircuitosComponent from "../InsertCircuitoComponent/InsertCircuitoComponent";
 
 function PanelAdministracion() {
   const [componenteActivo, setComponenteActivo] = useState(null);
@@ -23,6 +24,8 @@ function PanelAdministracion() {
         return <CodigosBarra />;
       case 'insertar-materiales':
         return <InsertMaterComponent />;
+      case 'insertar-circuitos':
+        return <InsertCircuitosComponent />;
       case 'insertar-lineas':
         return <InsertLineasComponent />;
       case 'insertar-racks':
@@ -39,43 +42,49 @@ function PanelAdministracion() {
   return (
     <div className="panel-container">
       <header className="panel-header">
-        <img src="logo.png" alt="logoatr" className="logoATR-panadm"/>
+        <img src="logo.png" alt="logoatr" className="logoATR-panadm" />
         <div className="panel-title-container">
           <h1 className="panel-title">Panel de Administración</h1>
         </div>
         <div className="panel-cards">
-          <div 
-            className="panel-card" 
+          <div
+            className="panel-card"
             onClick={() => handleCardClick('codigos-barra')}
           >
             <h2>Códigos de Barra</h2>
           </div>
-          <div 
-            className="panel-card" 
+          <div
+            className="panel-card"
             onClick={() => handleCardClick('codigos-qr')}
           >
             <h2>Codigos QR</h2>
           </div>
-          <div 
-            className="panel-card" 
+          <div
+            className="panel-card"
             onClick={() => handleCardClick('insertar-materiales')}
           >
             <h2>Insertar Materiales</h2>
           </div>
-          <div 
-            className="panel-card" 
+          <div
+            className="panel-card"
+            onClick={() => handleCardClick('insertar-circuitos')}
+          >
+            <h2>Insertar Circuitos</h2>
+          </div>
+          <div
+            className="panel-card"
             onClick={() => handleCardClick('insertar-lineas')}
           >
             <h2>Insertar Líneas</h2>
           </div>
-          <div 
-            className="panel-card" 
+          <div
+            className="panel-card"
             onClick={() => handleCardClick('insertar-racks')}
           >
             <h2>Insertar Rack</h2>
           </div>
-          <div 
-            className="panel-card" 
+          <div
+            className="panel-card"
             onClick={() => handleCardClick('adm-solicitudes')}
           >
             <h2>Solicitudes</h2>

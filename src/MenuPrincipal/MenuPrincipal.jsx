@@ -12,7 +12,7 @@ function MenuLineasPrincipal() {
     const fetchData = async () => {
       try {
         // Obtener líneas
-        const lineasResponse = await axios.get(`http://172.30.189.116:5000/lines/`);
+        const lineasResponse = await axios.get(`http://172.30.189.118:5000/lines/`);
         setLineas(lineasResponse.data);
       } catch (error) {
         console.error("<<Error fetching data>>", error);

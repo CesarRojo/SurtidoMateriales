@@ -2,7 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom"; 
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import './MenuLineas.css'; 
+import '../MenuLineasComponent/MenuLineas.css'; 
 import io from "socket.io-client";
 
 function MenuLineasComponent() {
@@ -21,7 +21,7 @@ function MenuLineasComponent() {
 
   const fetchData = async () => {
     try {
-      const solicitudesResponse = await axios.get(`http://172.30.189.118:5000/solicitudes/fecha`);
+      const solicitudesResponse = await axios.get(`http://172.30.189.118:5000/solicitudCircuito/fecha`);
       setSolicitudes(solicitudesResponse.data);
     } catch (error) {
       console.error("<<Error fetching data>>", error);
@@ -64,12 +64,12 @@ function MenuLineasComponent() {
   };
 
   const handleCardClick = (IdentificadorLinea) => {
-    navigate(`/solicitudes/${IdentificadorLinea}`);
+    navigate(`/solicitudesCircuito/${IdentificadorLinea}`);
   };
 
   return (
     <div className="lineas-container">
-      <h1>Solicitudes por Línea</h1>
+      <h1>Solicitudes de circuito por Línea</h1>
       <div className="lineas-cards">
         {lineas.map((linea) => {
           const { cantidad, tieneUrgente } = contarSolicitudesPendientesPorLinea(linea.idLinea);

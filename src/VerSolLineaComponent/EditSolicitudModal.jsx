@@ -12,7 +12,7 @@ const EditSolicitudModal = ({ isOpen, onClose, solicitud, onUpdate, fetchDataSol
     useEffect(() => {
         const fetchDataMaterial = async () => {
             try {
-                const response = await axios.get(`http://172.30.189.116:5000/material/floor`, {
+                const response = await axios.get(`http://172.30.189.118:5000/material/floor`, {
                     params: {
                         floor: Floor,
                     }
@@ -48,7 +48,7 @@ const EditSolicitudModal = ({ isOpen, onClose, solicitud, onUpdate, fetchDataSol
     
         try {
             // Actualiza la solicitud
-            await axios.put(`http://172.30.189.116:5000/solicitudes/${solicitud.idSolicitud}`, updatedSolicitud);
+            await axios.put(`http://172.30.189.118:5000/solicitudes/${solicitud.idSolicitud}`, updatedSolicitud);
             // Actualiza el estado en el front-end
             onUpdate({ ...solicitud, ...updatedSolicitud });
             fetchDataSolicitudes();
